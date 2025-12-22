@@ -104,86 +104,165 @@
     return { id, path, label, colorDotClass, isLastInPath, clueText, hints };
   }
 
-  function buildClues() {
-    const clues = [];
+function buildClues() {
+  const clues = [];
 
-    // Main path: 20 clues
-    for (let i = 1; i <= 20; i++) {
-      clues.push(makeClue({
-        id: `main_${i}`,
-        path: "main",
-        label: `Clue ${i}`,
-        colorDotClass: "dot-rg",
-        passcode: `MAIN${i}_PASSCODE_PLACEHOLDER`
-      }));
-    }
+  // =========================
+  // CLUE DATA MAP (EDIT HERE)
+  // =========================
+  const CLUE_DATA = {
+    // EXAMPLES — edit/remove these and add your real ones:
 
-    // Gold final clue (unlocks ONLY when all 20 main are solved)
-    clues.push(makeClue({
-      id: `gold_final`,
-      path: "gold",
-      label: `Gold Clue (Grand Prize)`,
-      colorDotClass: "dot-gold",
-      isLastInPath: true,
-      clueText: "FINAL GOLD CLUE TEXT — replace later.",
+    "main_1": {
+      clueText: "Your real clue text for Main 1 goes here.",
       hints: [
-        "GOLD HINT 1 — replace later.",
-        "GOLD HINT 2 — replace later.",
-        "GOLD HINT 3 — replace later."
+        "Main 1 hint 1 goes here.",
+        "Main 1 hint 2 goes here.",
+        "Main 1 hint 3 goes here."
       ],
-      passcode: `GOLD_PASSCODE_UNUSED`
+      passcode: "TREE123"
+    },
+
+    "main_16": {
+      clueText: "Clue 16 text testing.",
+      hints: [
+        "Main 16 hint 1 goes here.",
+        "Main 16 hint 2 goes here.",
+        "Main 16 hint 3 goes here."
+      ],
+      passcode: "TREE123"
+    },
+
+    "blue_1": {
+      clueText: "Your real clue text for Blue 1 goes here.",
+      hints: [
+        "Blue 1 hint 1 goes here.",
+        "Blue 1 hint 2 goes here.",
+        "Blue 1 hint 3 goes here."
+      ],
+      passcode: "BLUEKEY"
+    }
+  };
+
+  // Main path: 20 clues
+  for (let i = 1; i <= 20; i++) {
+    const id = `main_${i}`;
+    const d = CLUE_DATA[id] || {};
+
+    clues.push(makeClue({
+      id,
+      path: "main",
+      label: `Clue ${i}`,
+      colorDotClass: "dot-rg",
+      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+      hints: d.hints || [
+        "PLACEHOLDER HINT 1 — replace later.",
+        "PLACEHOLDER HINT 2 — replace later.",
+        "PLACEHOLDER HINT 3 — replace later."
+      ],
+      passcode: d.passcode || `MAIN${i}_PASSCODE_PLACEHOLDER`
     }));
-
-    // Blue: 6 (last is #6)
-    for (let i = 1; i <= 6; i++) {
-      clues.push(makeClue({
-        id: `blue_${i}`,
-        path: "blue",
-        label: `Blue Clue ${i}`,
-        colorDotClass: "dot-blue",
-        isLastInPath: i === 6,
-        passcode: `BLUE${i}_PASSCODE_PLACEHOLDER`
-      }));
-    }
-
-    // Purple: 5 (last is #5)
-    for (let i = 1; i <= 5; i++) {
-      clues.push(makeClue({
-        id: `purple_${i}`,
-        path: "purple",
-        label: `Purple Clue ${i}`,
-        colorDotClass: "dot-purple",
-        isLastInPath: i === 5,
-        passcode: `PURPLE${i}_PASSCODE_PLACEHOLDER`
-      }));
-    }
-
-    // Orange: 4 (last is #4)
-    for (let i = 1; i <= 4; i++) {
-      clues.push(makeClue({
-        id: `orange_${i}`,
-        path: "orange",
-        label: `Orange Clue ${i}`,
-        colorDotClass: "dot-orange",
-        isLastInPath: i === 4,
-        passcode: `ORANGE${i}_PASSCODE_PLACEHOLDER`
-      }));
-    }
-
-    // White: 3 (last is #3)
-    for (let i = 1; i <= 3; i++) {
-      clues.push(makeClue({
-        id: `white_${i}`,
-        path: "white",
-        label: `White Clue ${i}`,
-        colorDotClass: "dot-white",
-        isLastInPath: i === 3,
-        passcode: `WHITE${i}_PASSCODE_PLACEHOLDER`
-      }));
-    }
-
-    return clues;
   }
+
+  // Gold final clue (unlocks ONLY when all 20 main are solved)
+  clues.push(makeClue({
+    id: `gold_final`,
+    path: "gold",
+    label: `Gold Clue (Grand Prize)`,
+    colorDotClass: "dot-gold",
+    isLastInPath: true,
+    clueText: (CLUE_DATA["gold_final"]?.clueText) || "FINAL GOLD CLUE TEXT — replace later.",
+    hints: (CLUE_DATA["gold_final"]?.hints) || [
+      "GOLD HINT 1 — replace later.",
+      "GOLD HINT 2 — replace later.",
+      "GOLD HINT 3 — replace later."
+    ],
+    passcode: `GOLD_PASSCODE_UNUSED`
+  }));
+
+  // Blue: 6 (last is #6)
+  for (let i = 1; i <= 6; i++) {
+    const id = `blue_${i}`;
+    const d = CLUE_DATA[id] || {};
+    clues.push(makeClue({
+      id,
+      path: "blue",
+      label: `Blue Clue ${i}`,
+      colorDotClass: "dot-blue",
+      isLastInPath: i === 6,
+      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+      hints: d.hints || [
+        "PLACEHOLDER HINT 1 — replace later.",
+        "PLACEHOLDER HINT 2 — replace later.",
+        "PLACEHOLDER HINT 3 — replace later."
+      ],
+      passcode: d.passcode || `BLUE${i}_PASSCODE_PLACEHOLDER`
+    }));
+  }
+
+  // Purple: 5 (last is #5)
+  for (let i = 1; i <= 5; i++) {
+    const id = `purple_${i}`;
+    const d = CLUE_DATA[id] || {};
+    clues.push(makeClue({
+      id,
+      path: "purple",
+      label: `Purple Clue ${i}`,
+      colorDotClass: "dot-purple",
+      isLastInPath: i === 5,
+      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+      hints: d.hints || [
+        "PLACEHOLDER HINT 1 — replace later.",
+        "PLACEHOLDER HINT 2 — replace later.",
+        "PLACEHOLDER HINT 3 — replace later."
+      ],
+      passcode: d.passcode || `PURPLE${i}_PASSCODE_PLACEHOLDER`
+    }));
+  }
+
+  // Orange: 4 (last is #4)
+  for (let i = 1; i <= 4; i++) {
+    const id = `orange_${i}`;
+    const d = CLUE_DATA[id] || {};
+    clues.push(makeClue({
+      id,
+      path: "orange",
+      label: `Orange Clue ${i}`,
+      colorDotClass: "dot-orange",
+      isLastInPath: i === 4,
+      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+      hints: d.hints || [
+        "PLACEHOLDER HINT 1 — replace later.",
+        "PLACEHOLDER HINT 2 — replace later.",
+        "PLACEHOLDER HINT 3 — replace later."
+      ],
+      passcode: d.passcode || `ORANGE${i}_PASSCODE_PLACEHOLDER`
+    }));
+  }
+
+  // White: 3 (last is #3)
+  for (let i = 1; i <= 3; i++) {
+    const id = `white_${i}`;
+    const d = CLUE_DATA[id] || {};
+    clues.push(makeClue({
+      id,
+      path: "white",
+      label: `White Clue ${i}`,
+      colorDotClass: "dot-white",
+      isLastInPath: i === 3,
+      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+      hints: d.hints || [
+        "PLACEHOLDER HINT 1 — replace later.",
+        "PLACEHOLDER HINT 2 — replace later.",
+        "PLACEHOLDER HINT 3 — replace later."
+      ],
+      passcode: d.passcode || `WHITE${i}_PASSCODE_PLACEHOLDER`
+    }));
+  }
+
+  return clues;
+}
+
 
   const ALL_CLUES = buildClues();
 
