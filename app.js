@@ -37,7 +37,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   // Your HTML is served from /xmas/, so "./assets/..." is correct.
   const PLAYLIST = [
     { title: "All I Want For Christmas Is You by Mariah Carey", file: "./assets/All I Want For Christmas Is You.mp3" },
-    { title: "Christmas Track 2", file: "./assets/music2.mp3" },
+    { title: "Hallelujah by Pentatonix", file: "./assets/Hallelujah.mp3" },
     { title: "Christmas Track 3", file: "./assets/music3.mp3" }
   ];
 
