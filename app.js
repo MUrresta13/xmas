@@ -114,11 +114,37 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     // =========================
     // CLUE DATA MAP (EDIT HERE)
     // =========================
-    const CLUE_DATA = {
-      // "main_1": { clueText:"...", hints:["...","...","..."], passcode:"TREE123" },
-      // "blue_1": { clueText:"...", hints:["...","...","..."], passcode:"BLUEKEY" },
-      // "gold_final": { clueText:"...", hints:["...","...","..."] }
-    };
+const CLUE_DATA = {
+  "main_13": {
+    clueText: "REPLACE ME: Clue text for main_13",
+    hints: [
+      "REPLACE ME: Hint 1",
+      "REPLACE ME: Hint 2",
+      "REPLACE ME: Hint 3"
+    ],
+    passcode: "REPLACE13"
+  },
+
+  "blue_1": {
+    clueText: "REPLACE ME: Clue text for blue_1",
+    hints: [
+      "REPLACE ME: Hint 1",
+      "REPLACE ME: Hint 2",
+      "REPLACE ME: Hint 3"
+    ],
+    passcode: "REPLACE2"
+  },
+
+  "gold_final": {
+    clueText: "REPLACE ME: Final gold clue text",
+    hints: [
+      "REPLACE ME: Gold hint 1",
+      "REPLACE ME: Gold hint 2",
+      "REPLACE ME: Gold hint 3"
+    ]
+  }
+};
+
 
     // Main path: 20 clues
     for (let i = 1; i <= 20; i++) {
