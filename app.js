@@ -38,7 +38,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   const PLAYLIST = [
     { title: "All I Want For Christmas Is You by Mariah Carey", file: "./assets/All I Want For Christmas Is You.mp3" },
     { title: "Hallelujah by Pentatonix", file: "./assets/Hallelujah.mp3" },
-    { title: "Christmas Track 3", file: "./assets/music3.mp3" }
+    { title: "Jingle Bell Rock by Bobby Helms", file: "./assets/Jingle Bell Rock.mp3" }
   ];
 
   const HINT_DELAY_MS = [10, 30, 60].map(m => m * 60 * 1000);
