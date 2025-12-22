@@ -13,10 +13,8 @@
 </head>
 
 <body>
-  <!-- Snow overlay -->
   <div class="snow" aria-hidden="true"></div>
 
-  <!-- START SCREEN -->
   <main id="startScreen" class="screen screen--active">
     <div class="startCard">
       <img class="startIcon" src="./assets/xmas.PNG" alt="Christmas Hunt Icon" />
@@ -30,7 +28,6 @@
     </div>
   </main>
 
-  <!-- APP SCREEN -->
   <main id="appScreen" class="screen">
     <header class="header">
       <div class="headerLeft">
@@ -51,7 +48,6 @@
       </div>
     </header>
 
-    <!-- MUSIC DRAWER -->
     <aside id="musicDrawer" class="drawer" aria-hidden="true">
       <div class="drawerHeader">
         <div class="drawerTitle">Background Music</div>
@@ -85,7 +81,6 @@
       </div>
     </aside>
 
-    <!-- RULES MODAL -->
     <div id="rulesModal" class="modal" aria-hidden="true">
       <div class="modalCard">
         <div class="modalHeader">
@@ -98,7 +93,7 @@
             <li>Each clue has a passcode box. When you find that clue in the house, you’ll get the passcode and enter it here to solve.</li>
             <li>Solving a clue unlocks another random clue in that same path (until the last clue, which only unlocks after the others are solved).</li>
             <li>Hints unlock over time after a clue is unlocked: 10 minutes, 30 minutes, 60 minutes (countdowns shown).</li>
-            <li>Progress saves automatically on your device.</li>
+            <li>Once you save your name, it locks for fairness.</li>
           </ul>
 
           <div class="resetBox">
@@ -113,9 +108,7 @@
       </div>
     </div>
 
-    <!-- MAIN LAYOUT -->
     <section class="layout">
-      <!-- LEFT: PLAYER + LEADERBOARD -->
       <aside class="panel">
         <div class="panelTitle">Player</div>
 
@@ -125,7 +118,7 @@
             <input id="playerName" class="input" type="text" placeholder="Enter your name" maxlength="24" />
             <button id="saveNameBtn" class="btn btn--primary" type="button">Save</button>
           </div>
-          <div class="labelSub">This is a local leaderboard (same device) unless you later add a backend.</div>
+          <div class="labelSub">Name locks after saving. Leaderboard is shared if backend is configured.</div>
         </div>
 
         <div class="panelTitle">Leaderboard</div>
@@ -143,7 +136,6 @@
         </div>
       </aside>
 
-      <!-- RIGHT: CLUES -->
       <section class="panel panel--wide">
         <div class="panelTitle">Unlock Boxes</div>
 
@@ -212,11 +204,11 @@
       </section>
     </section>
 
-    <!-- Audio elements -->
     <audio id="bgm" preload="auto"></audio>
     <audio id="sfxUnlock" src="./assets/Unlock.mp3" preload="auto"></audio>
   </main>
 
-  <script src="./app.js"></script>
+  <!-- IMPORTANT: module is required because app.js imports Supabase -->
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
