@@ -1,18 +1,27 @@
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
 /* Xmas Hunt 2025
-   - Saves progress to localStorage
-   - Random unlock per pathway with “last clue locked until all others solved”
-   - Timed hint unlocks: 10/30/60 minutes after clue unlock time (visible countdown)
-   - Unlock SFX plays without interrupting background music
+   - Name locks after first save
+   - Shared leaderboard & progress via Supabase (anonymous auth)
+   - Realtime updates via Postgres Changes subscription
+   - Local fallback still works if Supabase keys are left blank
 */
 
 (() => {
-  const STORAGE_KEY = "xmasHunt2025_state_v2";
+  const STORAGE_KEY = "xmasHunt2025_state_v3";
+
+  // =========================
+  // SUPABASE CONFIG (EDIT THIS)
+  // =========================
+  const SUPABASE_URL = "";      // <-- paste your project URL
+  const SUPABASE_ANON_KEY = ""; // <-- paste your anon key
+  const BACKEND_ENABLED = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+
+  const supabase = BACKEND_ENABLED ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
   // =========================
   // CONFIG YOU EDIT LATER
   // =========================
-
-  // Path unlock passcodes (placeholders)
   const PATH_UNLOCK_CODES = {
     main: "CHRISTMAS2025",
     blue: "BLUECODEPLACEHOLDER",
@@ -21,17 +30,14 @@
     white: "WHITECODEPLACEHOLDER"
   };
 
-  // Host reset passcode
   const RESET_CODE = "MikeChristmas1998";
 
-  // Playlist (add more tracks, rename files, etc.)
   const PLAYLIST = [
     { title: "Christmas Track 1", file: "./assets/music1.mp3" },
     { title: "Christmas Track 2", file: "./assets/music2.mp3" },
     { title: "Christmas Track 3", file: "./assets/music3.mp3" }
   ];
 
-  // Hint unlock delays in ms (10, 30, 60 minutes)
   const HINT_DELAY_MS = [10, 30, 60].map(m => m * 60 * 1000);
 
   // =========================
@@ -83,10 +89,8 @@
   // =========================
   // DATA MODEL
   // =========================
-
   function now() { return Date.now(); }
 
-  // per-clue passcode mapping
   const PASSCODES = {};
 
   function makeClue({
@@ -104,199 +108,157 @@
     return { id, path, label, colorDotClass, isLastInPath, clueText, hints };
   }
 
-function buildClues() {
-  const clues = [];
+  function buildClues() {
+    const clues = [];
 
-  // =========================
-  // CLUE DATA MAP (EDIT HERE)
-  // =========================
-  const CLUE_DATA = {
-    // EXAMPLES — edit/remove these and add your real ones:
+    // =========================
+    // CLUE DATA MAP (EDIT HERE)
+    // =========================
+    const CLUE_DATA = {
+      // "main_1": { clueText:"...", hints:["...","...","..."], passcode:"TREE123" },
+      // "blue_1": { clueText:"...", hints:["...","...","..."], passcode:"BLUEKEY" },
+      // "gold_final": { clueText:"...", hints:["...","...","..."] }
+    };
 
-    "main_1": {
-      clueText: "Your real clue text for Main 1 goes here.",
-      hints: [
-        "Main 1 hint 1 goes here.",
-        "Main 1 hint 2 goes here.",
-        "Main 1 hint 3 goes here."
-      ],
-      passcode: "TREE123"
-    },
-
-    "main_16": {
-      clueText: "Clue 16 text testing.",
-      hints: [
-        "Main 16 hint 1 goes here.",
-        "Main 16 hint 2 goes here.",
-        "Main 16 hint 3 goes here."
-      ],
-      passcode: "TREE123"
-    },
-
-    "blue_1": {
-      clueText: "Your real clue text for Blue 1 goes here.",
-      hints: [
-        "Blue 1 hint 1 goes here.",
-        "Blue 1 hint 2 goes here.",
-        "Blue 1 hint 3 goes here."
-      ],
-      passcode: "BLUEKEY"
+    // Main path: 20 clues
+    for (let i = 1; i <= 20; i++) {
+      const id = `main_${i}`;
+      const d = CLUE_DATA[id] || {};
+      clues.push(makeClue({
+        id,
+        path: "main",
+        label: `Clue ${i}`,
+        colorDotClass: "dot-rg",
+        clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+        hints: d.hints || [
+          "PLACEHOLDER HINT 1 — replace later.",
+          "PLACEHOLDER HINT 2 — replace later.",
+          "PLACEHOLDER HINT 3 — replace later."
+        ],
+        passcode: d.passcode || `MAIN${i}_PASSCODE_PLACEHOLDER`
+      }));
     }
-  };
 
-  // Main path: 20 clues
-  for (let i = 1; i <= 20; i++) {
-    const id = `main_${i}`;
-    const d = CLUE_DATA[id] || {};
-
+    // Gold final clue
     clues.push(makeClue({
-      id,
-      path: "main",
-      label: `Clue ${i}`,
-      colorDotClass: "dot-rg",
-      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
-      hints: d.hints || [
-        "PLACEHOLDER HINT 1 — replace later.",
-        "PLACEHOLDER HINT 2 — replace later.",
-        "PLACEHOLDER HINT 3 — replace later."
+      id: `gold_final`,
+      path: "gold",
+      label: `Gold Clue (Grand Prize)`,
+      colorDotClass: "dot-gold",
+      isLastInPath: true,
+      clueText: (CLUE_DATA["gold_final"]?.clueText) || "FINAL GOLD CLUE TEXT — replace later.",
+      hints: (CLUE_DATA["gold_final"]?.hints) || [
+        "GOLD HINT 1 — replace later.",
+        "GOLD HINT 2 — replace later.",
+        "GOLD HINT 3 — replace later."
       ],
-      passcode: d.passcode || `MAIN${i}_PASSCODE_PLACEHOLDER`
+      passcode: `GOLD_PASSCODE_UNUSED`
     }));
+
+    // Blue: 6 (last is #6)
+    for (let i = 1; i <= 6; i++) {
+      const id = `blue_${i}`;
+      const d = CLUE_DATA[id] || {};
+      clues.push(makeClue({
+        id,
+        path: "blue",
+        label: `Blue Clue ${i}`,
+        colorDotClass: "dot-blue",
+        isLastInPath: i === 6,
+        clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+        hints: d.hints || [
+          "PLACEHOLDER HINT 1 — replace later.",
+          "PLACEHOLDER HINT 2 — replace later.",
+          "PLACEHOLDER HINT 3 — replace later."
+        ],
+        passcode: d.passcode || `BLUE${i}_PASSCODE_PLACEHOLDER`
+      }));
+    }
+
+    // Purple: 5
+    for (let i = 1; i <= 5; i++) {
+      const id = `purple_${i}`;
+      const d = CLUE_DATA[id] || {};
+      clues.push(makeClue({
+        id,
+        path: "purple",
+        label: `Purple Clue ${i}`,
+        colorDotClass: "dot-purple",
+        isLastInPath: i === 5,
+        clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+        hints: d.hints || [
+          "PLACEHOLDER HINT 1 — replace later.",
+          "PLACEHOLDER HINT 2 — replace later.",
+          "PLACEHOLDER HINT 3 — replace later."
+        ],
+        passcode: d.passcode || `PURPLE${i}_PASSCODE_PLACEHOLDER`
+      }));
+    }
+
+    // Orange: 4
+    for (let i = 1; i <= 4; i++) {
+      const id = `orange_${i}`;
+      const d = CLUE_DATA[id] || {};
+      clues.push(makeClue({
+        id,
+        path: "orange",
+        label: `Orange Clue ${i}`,
+        colorDotClass: "dot-orange",
+        isLastInPath: i === 4,
+        clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+        hints: d.hints || [
+          "PLACEHOLDER HINT 1 — replace later.",
+          "PLACEHOLDER HINT 2 — replace later.",
+          "PLACEHOLDER HINT 3 — replace later."
+        ],
+        passcode: d.passcode || `ORANGE${i}_PASSCODE_PLACEHOLDER`
+      }));
+    }
+
+    // White: 3
+    for (let i = 1; i <= 3; i++) {
+      const id = `white_${i}`;
+      const d = CLUE_DATA[id] || {};
+      clues.push(makeClue({
+        id,
+        path: "white",
+        label: `White Clue ${i}`,
+        colorDotClass: "dot-white",
+        isLastInPath: i === 3,
+        clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
+        hints: d.hints || [
+          "PLACEHOLDER HINT 1 — replace later.",
+          "PLACEHOLDER HINT 2 — replace later.",
+          "PLACEHOLDER HINT 3 — replace later."
+        ],
+        passcode: d.passcode || `WHITE${i}_PASSCODE_PLACEHOLDER`
+      }));
+    }
+
+    return clues;
   }
-
-  // Gold final clue (unlocks ONLY when all 20 main are solved)
-  clues.push(makeClue({
-    id: `gold_final`,
-    path: "gold",
-    label: `Gold Clue (Grand Prize)`,
-    colorDotClass: "dot-gold",
-    isLastInPath: true,
-    clueText: (CLUE_DATA["gold_final"]?.clueText) || "FINAL GOLD CLUE TEXT — replace later.",
-    hints: (CLUE_DATA["gold_final"]?.hints) || [
-      "GOLD HINT 1 — replace later.",
-      "GOLD HINT 2 — replace later.",
-      "GOLD HINT 3 — replace later."
-    ],
-    passcode: `GOLD_PASSCODE_UNUSED`
-  }));
-
-  // Blue: 6 (last is #6)
-  for (let i = 1; i <= 6; i++) {
-    const id = `blue_${i}`;
-    const d = CLUE_DATA[id] || {};
-    clues.push(makeClue({
-      id,
-      path: "blue",
-      label: `Blue Clue ${i}`,
-      colorDotClass: "dot-blue",
-      isLastInPath: i === 6,
-      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
-      hints: d.hints || [
-        "PLACEHOLDER HINT 1 — replace later.",
-        "PLACEHOLDER HINT 2 — replace later.",
-        "PLACEHOLDER HINT 3 — replace later."
-      ],
-      passcode: d.passcode || `BLUE${i}_PASSCODE_PLACEHOLDER`
-    }));
-  }
-
-  // Purple: 5 (last is #5)
-  for (let i = 1; i <= 5; i++) {
-    const id = `purple_${i}`;
-    const d = CLUE_DATA[id] || {};
-    clues.push(makeClue({
-      id,
-      path: "purple",
-      label: `Purple Clue ${i}`,
-      colorDotClass: "dot-purple",
-      isLastInPath: i === 5,
-      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
-      hints: d.hints || [
-        "PLACEHOLDER HINT 1 — replace later.",
-        "PLACEHOLDER HINT 2 — replace later.",
-        "PLACEHOLDER HINT 3 — replace later."
-      ],
-      passcode: d.passcode || `PURPLE${i}_PASSCODE_PLACEHOLDER`
-    }));
-  }
-
-  // Orange: 4 (last is #4)
-  for (let i = 1; i <= 4; i++) {
-    const id = `orange_${i}`;
-    const d = CLUE_DATA[id] || {};
-    clues.push(makeClue({
-      id,
-      path: "orange",
-      label: `Orange Clue ${i}`,
-      colorDotClass: "dot-orange",
-      isLastInPath: i === 4,
-      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
-      hints: d.hints || [
-        "PLACEHOLDER HINT 1 — replace later.",
-        "PLACEHOLDER HINT 2 — replace later.",
-        "PLACEHOLDER HINT 3 — replace later."
-      ],
-      passcode: d.passcode || `ORANGE${i}_PASSCODE_PLACEHOLDER`
-    }));
-  }
-
-  // White: 3 (last is #3)
-  for (let i = 1; i <= 3; i++) {
-    const id = `white_${i}`;
-    const d = CLUE_DATA[id] || {};
-    clues.push(makeClue({
-      id,
-      path: "white",
-      label: `White Clue ${i}`,
-      colorDotClass: "dot-white",
-      isLastInPath: i === 3,
-      clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
-      hints: d.hints || [
-        "PLACEHOLDER HINT 1 — replace later.",
-        "PLACEHOLDER HINT 2 — replace later.",
-        "PLACEHOLDER HINT 3 — replace later."
-      ],
-      passcode: d.passcode || `WHITE${i}_PASSCODE_PLACEHOLDER`
-    }));
-  }
-
-  return clues;
-}
-
 
   const ALL_CLUES = buildClues();
 
   // =========================
   // STATE
   // =========================
-
   const defaultState = () => ({
     hasEnteredApp: false,
     playerName: "",
+    nameLocked: false,
+
     localPlayers: {},
+    remotePlayers: null,  // populated from Supabase when enabled
 
     clues: Object.fromEntries(ALL_CLUES.map(c => [
       c.id,
-      {
-        unlocked: false,
-        solved: false,
-        unlockedAt: null
-      }
+      { unlocked: false, solved: false, unlockedAt: null }
     ])),
 
-    pathUnlockUsed: {
-      main: false,
-      blue: false,
-      purple: false,
-      orange: false,
-      white: false
-    },
+    pathUnlockUsed: { main:false, blue:false, purple:false, orange:false, white:false },
 
-    music: {
-      enabled: true,
-      trackIndex: 0,
-      playing: false
-    }
+    music: { enabled:true, trackIndex:0, playing:false }
   });
 
   let state = loadState();
@@ -313,16 +275,33 @@ function buildClues() {
         pathUnlockUsed: { ...fresh.pathUnlockUsed, ...(parsed.pathUnlockUsed || {}) },
         music: { ...fresh.music, ...(parsed.music || {}) },
         clues: { ...fresh.clues, ...(parsed.clues || {}) },
-        localPlayers: { ...(parsed.localPlayers || {}) }
+        localPlayers: { ...(parsed.localPlayers || {}) },
+        remotePlayers: null
       };
     } catch {
       return defaultState();
     }
   }
 
+  // ===== Remote sync throttle =====
+  let remoteSyncTimer = null;
+  function queueRemoteSync() {
+    if (!BACKEND_ENABLED) return;
+    if (!state.nameLocked || !state.playerName) return;
+
+    if (remoteSyncTimer) return;
+    remoteSyncTimer = setTimeout(async () => {
+      remoteSyncTimer = null;
+      try {
+        await saveRemotePlayer();
+      } catch {}
+    }, 350);
+  }
+
   function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     syncLocalLeaderboard();
+    queueRemoteSync();
   }
 
   function resetState() {
@@ -332,45 +311,141 @@ function buildClues() {
   }
 
   // =========================
+  // SUPABASE (REMOTE)
+  // =========================
+  async function ensureSignedIn() {
+    if (!BACKEND_ENABLED) return null;
+
+    const { data: s1 } = await supabase.auth.getSession();
+    if (s1?.session?.user) return s1.session.user;
+
+    const { data, error } = await supabase.auth.signInAnonymously();
+    if (error) throw error;
+    return data.user;
+  }
+
+  function computeProgressSnapshot() {
+    return {
+      mainSolved: countSolved("main"),
+      blueSolved: countSolved("blue"),
+      purpleSolved: countSolved("purple"),
+      orangeSolved: countSolved("orange"),
+      whiteSolved: countSolved("white"),
+      goldUnlocked: !!state.clues["gold_final"]?.unlocked,
+      goldSolved: !!state.clues["gold_final"]?.solved
+    };
+  }
+
+  async function saveRemotePlayer() {
+    if (!BACKEND_ENABLED) return;
+    const user = await ensureSignedIn();
+    if (!user) return;
+
+    const pr = computeProgressSnapshot();
+
+    const payload = {
+      id: user.id,
+      name: state.playerName,
+      main_solved: pr.mainSolved,
+      blue_solved: pr.blueSolved,
+      purple_solved: pr.purpleSolved,
+      orange_solved: pr.orangeSolved,
+      white_solved: pr.whiteSolved,
+      gold_unlocked: pr.goldUnlocked,
+      gold_solved: pr.goldSolved,
+      updated_at: new Date().toISOString()
+    };
+
+    const { error } = await supabase
+      .from("players")
+      .upsert(payload, { onConflict: "id" });
+
+    if (error) console.log("saveRemotePlayer error", error);
+  }
+
+  async function fetchRemoteLeaderboard() {
+    if (!BACKEND_ENABLED) return;
+
+    const { data, error } = await supabase
+      .from("players")
+      .select("*");
+
+    if (error) {
+      console.log("fetchRemoteLeaderboard error", error);
+      return;
+    }
+
+    state.remotePlayers = Object.fromEntries((data || []).map(r => [
+      r.id,
+      {
+        name: r.name,
+        updatedAt: new Date(r.updated_at).getTime(),
+        progress: {
+          mainSolved: r.main_solved,
+          blueSolved: r.blue_solved,
+          purpleSolved: r.purple_solved,
+          orangeSolved: r.orange_solved,
+          whiteSolved: r.white_solved,
+          goldUnlocked: r.gold_unlocked,
+          goldSolved: r.gold_solved
+        }
+      }
+    ]));
+  }
+
+  function subscribeLeaderboardRealtime() {
+    if (!BACKEND_ENABLED) return;
+
+    supabase
+      .channel("players-changes")
+      .on("postgres_changes", { event: "*", schema: "public", table: "players" }, async () => {
+        await fetchRemoteLeaderboard();
+        renderLeaderboard();
+      })
+      .subscribe();
+  }
+
+  async function initRemoteIfEnabled() {
+    if (!BACKEND_ENABLED) return;
+
+    try {
+      await ensureSignedIn();
+      await fetchRemoteLeaderboard();
+      subscribeLeaderboardRealtime();
+
+      // If already locked name (returning player), ensure remote row exists/updates
+      if (state.nameLocked && state.playerName) {
+        await saveRemotePlayer();
+        await fetchRemoteLeaderboard();
+      }
+
+      renderLeaderboard();
+    } catch (e) {
+      console.log("Remote init error", e);
+    }
+  }
+
+  // =========================
   // HELPERS
   // =========================
-
-  function randChoice(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
-
-  function getPathClues(path) {
-    return ALL_CLUES.filter(c => c.path === path);
-  }
+  function randChoice(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function getPathClues(path) { return ALL_CLUES.filter(c => c.path === path); }
 
   function countSolved(path) {
     const ids = getPathClues(path).map(c => c.id);
     return ids.filter(id => state.clues[id]?.solved).length;
   }
+  function totalInPath(path) { return getPathClues(path).length; }
 
-  function totalInPath(path) {
-    return getPathClues(path).length;
-  }
-
-  function isGoldUnlockedByRules() {
-    return countSolved("main") >= 20;
-  }
+  function isGoldUnlockedByRules() { return countSolved("main") >= 20; }
 
   function eligibleRandomClueIds(path) {
-    // main: any unsolved/unlocked remain among 1..20
-    // side paths: random among non-last clues; last unlocks only when others solved
     const clues = getPathClues(path);
-
     if (path === "main") {
-      return clues
-        .filter(c => !state.clues[c.id].unlocked && !state.clues[c.id].solved)
-        .map(c => c.id);
+      return clues.filter(c => !state.clues[c.id].unlocked && !state.clues[c.id].solved).map(c => c.id);
     }
-
     const nonLast = clues.filter(c => !c.isLastInPath);
-    return nonLast
-      .filter(c => !state.clues[c.id].unlocked && !state.clues[c.id].solved)
-      .map(c => c.id);
+    return nonLast.filter(c => !state.clues[c.id].unlocked && !state.clues[c.id].solved).map(c => c.id);
   }
 
   function lastClueId(path) {
@@ -395,8 +470,7 @@ function buildClues() {
     cs.unlockedAt = now();
     saveState();
 
-    // SFX
-    try{
+    try {
       sfxUnlock.currentTime = 0;
       sfxUnlock.play().catch(() => {});
     } catch {}
@@ -410,7 +484,6 @@ function buildClues() {
       unlockClue(randChoice(eligible));
       return true;
     }
-
     if (canUnlockLastClue(path)) {
       const lastId = lastClueId(path);
       if (lastId && !state.clues[lastId].unlocked) {
@@ -418,7 +491,6 @@ function buildClues() {
         return true;
       }
     }
-
     return false;
   }
 
@@ -426,7 +498,6 @@ function buildClues() {
     const cs = state.clues[id];
     if (!cs?.unlocked || cs.solved) return { ok:false, msg:"Clue not unlocked (or already solved)." };
 
-    // Gold "solve" can be used, but doesn't require passcode logic
     if (id === "gold_final") {
       cs.solved = true;
       saveState();
@@ -463,24 +534,19 @@ function buildClues() {
 
   function hintCountdownInfo(clueId, hintIndex) {
     const cs = state.clues[clueId];
-    if (!cs?.unlocked || !cs.unlockedAt) {
-      return { unlocked: false, remainingMs: null, remainingText: "" };
-    }
+    if (!cs?.unlocked || !cs.unlockedAt) return { unlocked:false, remainingText:"" };
 
     const elapsed = now() - cs.unlockedAt;
     const delay = HINT_DELAY_MS[hintIndex];
     const remaining = delay - elapsed;
 
-    if (remaining <= 0) {
-      return { unlocked: true, remainingMs: 0, remainingText: "00:00" };
-    }
-    return { unlocked: false, remainingMs: remaining, remainingText: msToClock(remaining) };
+    if (remaining <= 0) return { unlocked:true, remainingText:"00:00" };
+    return { unlocked:false, remainingText: msToClock(remaining) };
   }
 
   // =========================
   // MUSIC
   // =========================
-
   function loadTrack(index) {
     if (!PLAYLIST.length) return;
     const safeIndex = ((index % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
@@ -512,21 +578,8 @@ function buildClues() {
   }
 
   // =========================
-  // LEADERBOARD (LOCAL)
+  // LOCAL LEADERBOARD (FALLBACK)
   // =========================
-
-  function computeProgressSnapshot() {
-    return {
-      mainSolved: countSolved("main"),
-      blueSolved: countSolved("blue"),
-      purpleSolved: countSolved("purple"),
-      orangeSolved: countSolved("orange"),
-      whiteSolved: countSolved("white"),
-      goldUnlocked: !!state.clues["gold_final"]?.unlocked,
-      goldSolved: !!state.clues["gold_final"]?.solved
-    };
-  }
-
   function syncLocalLeaderboard() {
     const name = (state.playerName || "").trim();
     if (!name) return;
@@ -543,7 +596,6 @@ function buildClues() {
   // =========================
   // RENDER
   // =========================
-
   function setScreen(isApp) {
     if (isApp) {
       startScreen.classList.remove("screen--active");
@@ -563,7 +615,6 @@ function buildClues() {
 
   function renderPlaylist() {
     playlistEl.innerHTML = "";
-
     if (!PLAYLIST.length) {
       playlistEl.innerHTML = `<div class="labelSub">No tracks configured.</div>`;
       return;
@@ -591,19 +642,18 @@ function buildClues() {
   }
 
   function renderLeaderboard() {
-    const players = Object.values(state.localPlayers || {})
-      .sort((a, b) => {
-        const ap = a.progress || {};
-        const bp = b.progress || {};
+    const source = state.remotePlayers
+      ? Object.values(state.remotePlayers)
+      : Object.values(state.localPlayers || {});
 
-        // Main path progress first
-        if ((bp.mainSolved ?? 0) !== (ap.mainSolved ?? 0)) return (bp.mainSolved ?? 0) - (ap.mainSolved ?? 0);
-
-        // Tie-breakers
-        if (!!bp.goldSolved !== !!ap.goldSolved) return (bp.goldSolved ? 1 : 0) - (ap.goldSolved ? 1 : 0);
-        if (!!bp.goldUnlocked !== !!ap.goldUnlocked) return (bp.goldUnlocked ? 1 : 0) - (ap.goldUnlocked ? 1 : 0);
-        return (b.updatedAt ?? 0) - (a.updatedAt ?? 0);
-      });
+    const players = source.sort((a, b) => {
+      const ap = a.progress || {};
+      const bp = b.progress || {};
+      if ((bp.mainSolved ?? 0) !== (ap.mainSolved ?? 0)) return (bp.mainSolved ?? 0) - (ap.mainSolved ?? 0);
+      if (!!bp.goldSolved !== !!ap.goldSolved) return (bp.goldSolved ? 1 : 0) - (ap.goldSolved ? 1 : 0);
+      if (!!bp.goldUnlocked !== !!ap.goldUnlocked) return (bp.goldUnlocked ? 1 : 0) - (ap.goldUnlocked ? 1 : 0);
+      return (b.updatedAt ?? 0) - (a.updatedAt ?? 0);
+    });
 
     if (players.length === 0) {
       leaderboardEl.innerHTML = `<div class="labelSub">No players yet. Save your name to appear here.</div>`;
@@ -626,7 +676,6 @@ function buildClues() {
 
       const row = document.createElement("div");
       row.className = "lbRow";
-
       row.innerHTML = `
         <div class="lbTop">
           <div class="lbName">${escapeHtml(p.name)}</div>
@@ -665,9 +714,9 @@ function buildClues() {
 
         <div class="lbSub" style="margin-top:10px;">
           <span><span class="tagDot dot-gold"></span>Gold: ${pr.goldSolved ? "Solved" : (pr.goldUnlocked ? "Unlocked" : "Locked")}</span>
+          <span>${BACKEND_ENABLED ? "Shared" : "Local"}</span>
         </div>
       `;
-
       leaderboardEl.appendChild(row);
     }
   }
@@ -685,7 +734,6 @@ function buildClues() {
       </div>
       <div class="badge">${countSolved(path)}/${totalInPath(path)} solved</div>
     `;
-
     wrap.appendChild(header);
     return wrap;
   }
@@ -784,18 +832,12 @@ function buildClues() {
 
   function renderPasscodeControls(c, unlocked, solved) {
     if (c.id === "gold_final") {
-      if (!unlocked) {
-        return `<div class="labelSub">Gold clue unlocks after all 20 Main Path clues are solved.</div>`;
-      }
+      if (!unlocked) return `<div class="labelSub">Gold clue unlocks after all 20 Main Path clues are solved.</div>`;
       return `<div class="labelStrong">Gold clue unlocked — follow it to the Grand Prize.</div>`;
     }
 
-    if (!unlocked) {
-      return `<div class="labelSub">Passcode box appears after this clue is unlocked.</div>`;
-    }
-    if (solved) {
-      return `<div class="labelStrong">Solved.</div>`;
-    }
+    if (!unlocked) return `<div class="labelSub">Passcode box appears after this clue is unlocked.</div>`;
+    if (solved) return `<div class="labelStrong">Solved.</div>`;
 
     return `
       <input class="input" data-pass="${c.id}" type="text" placeholder="Enter passcode to solve" />
@@ -805,49 +847,38 @@ function buildClues() {
   }
 
   function renderAll() {
-    // Disable unlock buttons after used once
     unlockMainBtn.disabled = state.pathUnlockUsed.main;
     unlockBlueBtn.disabled = state.pathUnlockUsed.blue;
     unlockPurpleBtn.disabled = state.pathUnlockUsed.purple;
     unlockOrangeBtn.disabled = state.pathUnlockUsed.orange;
     unlockWhiteBtn.disabled = state.pathUnlockUsed.white;
 
-    // Gold unlock rule check
-    if (isGoldUnlockedByRules() && !state.clues["gold_final"].unlocked) {
-      unlockClue("gold_final");
-    }
+    if (isGoldUnlockedByRules() && !state.clues["gold_final"].unlocked) unlockClue("gold_final");
 
-    // keep name input in sync
     playerNameInput.value = state.playerName || "";
+    playerNameInput.disabled = !!state.nameLocked;
+    saveNameBtn.disabled = !!state.nameLocked;
 
-    // render leaderboard + playlist
     renderLeaderboard();
     renderPlaylist();
 
-    // ONE LONG LIST:
     clueContainer.innerHTML = "";
 
-    // Main header + all main clues
     clueContainer.appendChild(renderPathHeader("main", "Main Path (Red/Green Ornaments)", "Solve 20 clues to unlock the Gold ornament.", "mainPath"));
     for (const c of getPathClues("main")) clueContainer.appendChild(renderClueCard(c));
 
-    // Blue
     clueContainer.appendChild(renderPathHeader("blue", "Blue Path", "Leads to the 2nd biggest prize.", "bluePath"));
     for (const c of getPathClues("blue")) clueContainer.appendChild(renderClueCard(c));
 
-    // Purple
     clueContainer.appendChild(renderPathHeader("purple", "Purple Path", "Leads to the 3rd biggest prize.", "purplePath"));
     for (const c of getPathClues("purple")) clueContainer.appendChild(renderClueCard(c));
 
-    // Orange
     clueContainer.appendChild(renderPathHeader("orange", "Orange Path", "Leads to the 4th biggest prize.", "orangePath"));
     for (const c of getPathClues("orange")) clueContainer.appendChild(renderClueCard(c));
 
-    // White
     clueContainer.appendChild(renderPathHeader("white", "White Path", "Leads to the 5th biggest prize.", "whitePath"));
     for (const c of getPathClues("white")) clueContainer.appendChild(renderClueCard(c));
 
-    // Gold
     const goldHeader = document.createElement("div");
     goldHeader.id = "goldPath";
     goldHeader.className = "pathHeader";
@@ -872,7 +903,6 @@ function buildClues() {
       if (!info.unlocked) {
         node.textContent = info.remainingText;
       } else {
-        // Flip to hint content immediately by re-rendering once
         renderAll();
         return;
       }
@@ -882,8 +912,7 @@ function buildClues() {
   // =========================
   // EVENTS
   // =========================
-
-  playBtn.addEventListener("click", () => {
+  playBtn.addEventListener("click", async () => {
     state.hasEnteredApp = true;
     saveState();
     setScreen(true);
@@ -892,14 +921,28 @@ function buildClues() {
     if (state.music.enabled) playMusic();
 
     registerSW();
+    await initRemoteIfEnabled();
   });
 
-  saveNameBtn.addEventListener("click", () => {
+  saveNameBtn.addEventListener("click", async () => {
+    if (state.nameLocked) return;
+
     const name = (playerNameInput.value || "").trim();
     if (!name) return;
+
     state.playerName = name;
+    state.nameLocked = true;
     saveState();
-    renderLeaderboard();
+
+    // push name + progress to remote immediately (if enabled)
+    if (BACKEND_ENABLED) {
+      try {
+        await saveRemotePlayer();
+        await fetchRemoteLeaderboard();
+      } catch {}
+    }
+
+    renderAll();
   });
 
   unlockMainBtn.addEventListener("click", () => {
@@ -943,7 +986,6 @@ function buildClues() {
   unlockOrangeBtn.addEventListener("click", () => handlePathUnlock("orange", unlockOrangeInput));
   unlockWhiteBtn.addEventListener("click", () => handlePathUnlock("white", unlockWhiteInput));
 
-  // Scroll buttons
   document.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-scroll]");
     if (!btn) return;
@@ -952,11 +994,7 @@ function buildClues() {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
-  // Music drawer
-  musicToggleBtn.addEventListener("click", () => {
-    const open = !musicDrawer.classList.contains("drawer--open");
-    setMusicDrawer(open);
-  });
+  musicToggleBtn.addEventListener("click", () => setMusicDrawer(!musicDrawer.classList.contains("drawer--open")));
   musicCloseBtn.addEventListener("click", () => setMusicDrawer(false));
 
   function setMusicDrawer(open) {
@@ -972,29 +1010,19 @@ function buildClues() {
     else playMusic();
   });
 
-  musicPrev.addEventListener("click", () => {
-    loadTrack(state.music.trackIndex - 1);
-    if (state.music.enabled) playMusic();
-  });
-  musicNext.addEventListener("click", () => {
-    loadTrack(state.music.trackIndex + 1);
-    if (state.music.enabled) playMusic();
-  });
+  musicPrev.addEventListener("click", () => { loadTrack(state.music.trackIndex - 1); if (state.music.enabled) playMusic(); });
+  musicNext.addEventListener("click", () => { loadTrack(state.music.trackIndex + 1); if (state.music.enabled) playMusic(); });
   musicPlayPause.addEventListener("click", toggleMusic);
 
-  // Rules modal
   howBtn.addEventListener("click", () => setRulesModal(true));
   rulesCloseBtn.addEventListener("click", () => setRulesModal(false));
-  rulesModal.addEventListener("click", (e) => {
-    if (e.target === rulesModal) setRulesModal(false);
-  });
+  rulesModal.addEventListener("click", (e) => { if (e.target === rulesModal) setRulesModal(false); });
 
   function setRulesModal(open) {
     rulesModal.classList.toggle("modal--open", open);
     rulesModal.setAttribute("aria-hidden", open ? "false" : "true");
   }
 
-  // Reset
   resetBtn.addEventListener("click", () => {
     const code = (resetInput.value || "").trim();
     if (code !== RESET_CODE) {
@@ -1008,16 +1036,17 @@ function buildClues() {
     setScreen(false);
   });
 
-  // Keep leaderboard progress updated when focus returns
-  window.addEventListener("focus", () => {
+  window.addEventListener("focus", async () => {
     syncLocalLeaderboard();
+    if (BACKEND_ENABLED) {
+      await fetchRemoteLeaderboard();
+    }
     renderLeaderboard();
   });
 
   // =========================
   // INIT
   // =========================
-
   function initMusic() {
     if (!PLAYLIST.length) return;
     loadTrack(Math.min(state.music.trackIndex, PLAYLIST.length - 1));
@@ -1042,19 +1071,16 @@ function buildClues() {
     if (state.hasEnteredApp) {
       setScreen(true);
       initMusic();
-      if (state.music.enabled && state.music.playing) {
-        playMusic();
-      } else if (PLAYLIST.length) {
-        loadTrack(state.music.trackIndex);
-      }
+      if (state.music.enabled && state.music.playing) playMusic();
+      else if (PLAYLIST.length) loadTrack(state.music.trackIndex);
       registerSW();
+      initRemoteIfEnabled();
     } else {
       setScreen(false);
     }
 
     renderAll();
 
-    // Live countdown update (only when app has started)
     setInterval(() => {
       if (!state.hasEnteredApp) return;
       updateHintCountdowns();
