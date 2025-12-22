@@ -1,4 +1,4 @@
-const CACHE_NAME = "xmas-hunt-2025-v1";
+const CACHE_NAME = "xmas-hunt-2025-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,7 +7,10 @@ const ASSETS = [
   "./manifest.json",
   "./sw.js",
   "./assets/xmas.PNG",
-  "./assets/Unlock.mp3"
+  "./assets/Unlock.mp3",
+  "./assets/music1.mp3",
+  "./assets/music2.mp3",
+  "./assets/music3.mp3"
 ];
 
 self.addEventListener("install", (event) => {
