@@ -14,8 +14,8 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   // SUPABASE CONFIG (EDIT THIS)
   // =========================
   const SUPABASE_URL = "https://vgbqlreurvigkxfyibol.supabase.co";      // <-- paste your project URL
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnYnFscmV1cnZpZ2t4ZnlpYm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNjA0MDEsImV4cCI6MjA4MTkzNjQwMX0.7KhWzoreujQWGtZ3CF43Bgz9hBI5FU0S6CWTiMpY0Ek"; // <-- paste your anon key
-  const BACKEND_ENABLED = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+  const SUPABASE_ANON_KEY = "PASTE_YOUR_ANON_KEY_HERE"; // <-- paste your anon key
+  const BACKEND_ENABLED = !!(SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes("PASTE_"));
 
   const supabase = BACKEND_ENABLED ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
@@ -32,16 +32,10 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
   const RESET_CODE = "MikeChristmas1998";
 
-  // IMPORTANT:
-  // Use relative paths that match your repo.
-  // Your HTML is served from /xmas/, so "./assets/..." is correct.
   const PLAYLIST = [
     { title: "All I Want For Christmas Is You by Mariah Carey", file: "./assets/All I Want For Christmas Is You.mp3" },
-    { title: "Hallelujah by Pentatonix", file: "./assets/Hallelujah.mp3" },
-    { title: "Jingle Bell Rock by Bobby Helms", file: "./assets/Jingle Bell Rock.mp3" },
-    { title: "Silent Night by Sinead OConnor", file: "./assets/Silent Night.mp3" },
-    { title: "Last Christmas by Wham!", file: "./assets/Last Christmas.mp3" },
-    { title: "Rockin Around The Christmas Tree by Brenda Lee", file: "./assets/Rockin Around The Christmas Tree.mp3" }
+    { title: "Christmas Track 2", file: "./assets/music2.mp3" },
+    { title: "Christmas Track 3", file: "./assets/music3.mp3" }
   ];
 
   const HINT_DELAY_MS = [10, 30, 60].map(m => m * 60 * 1000);
@@ -55,6 +49,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
   const clueContainer = document.getElementById("clueContainer");
   const leaderboardEl = document.getElementById("leaderboard");
+  const refreshLeaderboardBtn = document.getElementById("refreshLeaderboardBtn");
 
   const playerNameInput = document.getElementById("playerName");
   const saveNameBtn = document.getElementById("saveNameBtn");
@@ -117,27 +112,17 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   function buildClues() {
     const clues = [];
 
-    // =========================
-    // CLUE DATA MAP (EDIT HERE)
-    // =========================
     const CLUE_DATA = {
-      "main_13": {
-        clueText: "REPLACE ME: Clue text for main_13",
-        hints: ["REPLACE ME: Hint 1", "REPLACE ME: Hint 2", "REPLACE ME: Hint 3"],
-        passcode: "REPLACE13"
-      },
-      "blue_1": {
-        clueText: "REPLACE ME: Clue text for blue_1",
-        hints: ["REPLACE ME: Hint 1", "REPLACE ME: Hint 2", "REPLACE ME: Hint 3"],
-        passcode: "REPLACE2"
-      },
       "gold_final": {
-        clueText: "REPLACE ME: Final gold clue text",
-        hints: ["REPLACE ME: Gold hint 1", "REPLACE ME: Gold hint 2", "REPLACE ME: Gold hint 3"]
+        clueText: "FINAL GOLD CLUE TEXT — replace later.",
+        hints: [
+          "GOLD HINT 1 — replace later.",
+          "GOLD HINT 2 — replace later.",
+          "GOLD HINT 3 — replace later."
+        ]
       }
     };
 
-    // Main path: 20 clues
     for (let i = 1; i <= 20; i++) {
       const id = `main_${i}`;
       const d = CLUE_DATA[id] || {};
@@ -156,7 +141,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       }));
     }
 
-    // Gold final clue
     clues.push(makeClue({
       id: `gold_final`,
       path: "gold",
@@ -172,7 +156,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       passcode: `GOLD_PASSCODE_UNUSED`
     }));
 
-    // Blue: 6 (last is #6)
     for (let i = 1; i <= 6; i++) {
       const id = `blue_${i}`;
       const d = CLUE_DATA[id] || {};
@@ -192,7 +175,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       }));
     }
 
-    // Purple: 5
     for (let i = 1; i <= 5; i++) {
       const id = `purple_${i}`;
       const d = CLUE_DATA[id] || {};
@@ -212,7 +194,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       }));
     }
 
-    // Orange: 4
     for (let i = 1; i <= 4; i++) {
       const id = `orange_${i}`;
       const d = CLUE_DATA[id] || {};
@@ -232,7 +213,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       }));
     }
 
-    // White: 3
     for (let i = 1; i <= 3; i++) {
       const id = `white_${i}`;
       const d = CLUE_DATA[id] || {};
@@ -266,7 +246,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     nameLocked: false,
 
     localPlayers: {},
-    remotePlayers: null,  // populated from Supabase when enabled
+    remotePlayers: null,
 
     clues: Object.fromEntries(ALL_CLUES.map(c => [
       c.id,
@@ -300,7 +280,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     }
   }
 
-  // ===== Remote sync throttle =====
   let remoteSyncTimer = null;
   function queueRemoteSync() {
     if (!BACKEND_ENABLED) return;
@@ -309,9 +288,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     if (remoteSyncTimer) return;
     remoteSyncTimer = setTimeout(async () => {
       remoteSyncTimer = null;
-      try {
-        await saveRemotePlayer();
-      } catch {}
+      try { await saveRemotePlayer(); } catch {}
     }, 350);
   }
 
@@ -430,7 +407,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       await fetchRemoteLeaderboard();
       subscribeLeaderboardRealtime();
 
-      // If already locked name (returning player), ensure remote row exists/updates
       if (state.nameLocked && state.playerName) {
         await saveRemotePlayer();
         await fetchRemoteLeaderboard();
@@ -446,6 +422,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   // HELPERS
   // =========================
   function randChoice(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
   function getPathClues(path) { return ALL_CLUES.filter(c => c.path === path); }
 
   function countSolved(path) {
@@ -487,10 +464,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     cs.unlockedAt = now();
     saveState();
 
-    try {
-      sfxUnlock.currentTime = 0;
-      sfxUnlock.play().catch(() => {});
-    } catch {}
+    try { sfxUnlock.currentTime = 0; sfxUnlock.play().catch(() => {}); } catch {}
 
     renderAll();
   }
@@ -586,10 +560,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     const safeIndex = ((index % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
     state.music.trackIndex = safeIndex;
     bgm.src = PLAYLIST[safeIndex].file;
-
-    // IMPORTANT: don't loop one track; we shuffle on "ended"
     bgm.loop = false;
-
     saveState();
     renderPlaylist();
   }
@@ -628,7 +599,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     if (state.music.enabled) playMusic();
   }
 
-  // Auto-advance on shuffle when a song ends
   bgm.addEventListener("ended", () => {
     if (!state.music.enabled) return;
     if (!state.music.playing) return;
@@ -657,14 +627,8 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   function setScreen(isApp) {
     if (isApp) {
       startScreen.classList.remove("screen--active");
+      appScreen.classList reminder: use your existing CSS transitions;
       appScreen.classList.add("screen--active");
-      appScreen.style.opacity = "0";
-      appScreen.style.transform = "translateY(8px)";
-      requestAnimationFrame(() => {
-        appScreen.style.transition = "opacity .65s ease, transform .65s ease";
-        appScreen.style.opacity = "1";
-        appScreen.style.transform = "translateY(0)";
-      });
     } else {
       appScreen.classList.remove("screen--active");
       startScreen.classList.add("screen--active");
@@ -977,11 +941,29 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     setScreen(true);
 
     initMusic();
-    if (state.music.enabled) playMusic(); // <-- this click is what allows iPhone autoplay
+    if (state.music.enabled) playMusic();
 
     registerSW();
     await initRemoteIfEnabled();
   });
+
+  // ✅ NEW: Manual leaderboard refresh (no full page reload)
+  if (refreshLeaderboardBtn) {
+    refreshLeaderboardBtn.addEventListener("click", async () => {
+      refreshLeaderboardBtn.disabled = true;
+      const oldText = refreshLeaderboardBtn.textContent;
+      refreshLeaderboardBtn.textContent = "…";
+      try {
+        if (BACKEND_ENABLED) {
+          await fetchRemoteLeaderboard();
+        }
+        renderLeaderboard();
+      } finally {
+        refreshLeaderboardBtn.textContent = oldText;
+        refreshLeaderboardBtn.disabled = false;
+      }
+    });
+  }
 
   saveNameBtn.addEventListener("click", async () => {
     if (state.nameLocked) return;
@@ -993,7 +975,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     state.nameLocked = true;
     saveState();
 
-    // push name + progress to remote immediately (if enabled)
     if (BACKEND_ENABLED) {
       try {
         await saveRemotePlayer();
@@ -1069,7 +1050,6 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     else playMusic();
   });
 
-  // Shuffle controls:
   musicPrev.addEventListener("click", () => { playPreviousFromHistory(); });
   musicNext.addEventListener("click", () => { playRandomNextTrack(); });
   musicPlayPause.addEventListener("click", toggleMusic);
