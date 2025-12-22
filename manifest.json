@@ -1,0 +1,15 @@
+{
+  "name": "Xmas Hunt",
+  "short_name": "Xmas Hunt",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#071b14",
+  "theme_color": "#0b2a1e",
+  "icons": [
+    {
+      "src": "./assets/xmas.PNG",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
