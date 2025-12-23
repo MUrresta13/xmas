@@ -161,7 +161,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       clues.push(makeClue({
         id,
         path: "main",
-        label: `Clue ${i}`,
+        label: `Red/Green Ornament Clue ${i}`,
         colorDotClass: "dot-rg",
         clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
         hints: d.hints || [
@@ -177,7 +177,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     clues.push(makeClue({
       id: `gold_final`,
       path: "gold",
-      label: `Gold Clue (Grand Prize)`,
+      label: `Gold Ornament Clue (Grand Prize)`,
       colorDotClass: "dot-gold",
       isLastInPath: true,
       clueText: (CLUE_DATA["gold_final"]?.clueText) || "FINAL GOLD CLUE TEXT — replace later.",
@@ -196,7 +196,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       clues.push(makeClue({
         id,
         path: "blue",
-        label: `Blue Clue ${i}`,
+        label: `Blue Ornament Clue ${i}`,
         colorDotClass: "dot-blue",
         isLastInPath: i === 6,
         clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
@@ -216,7 +216,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       clues.push(makeClue({
         id,
         path: "purple",
-        label: `Purple Clue ${i}`,
+        label: `Purple Ornament Clue ${i}`,
         colorDotClass: "dot-purple",
         isLastInPath: i === 5,
         clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
@@ -236,7 +236,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       clues.push(makeClue({
         id,
         path: "orange",
-        label: `Orange Clue ${i}`,
+        label: `Orange Ornament Clue ${i}`,
         colorDotClass: "dot-orange",
         isLastInPath: i === 4,
         clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
@@ -256,7 +256,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       clues.push(makeClue({
         id,
         path: "white",
-        label: `White Clue ${i}`,
+        label: `White Ornament Clue ${i}`,
         colorDotClass: "dot-white",
         isLastInPath: i === 3,
         clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
@@ -935,19 +935,19 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
     clueContainer.innerHTML = "";
 
-    clueContainer.appendChild(renderPathHeader("main", "Main Path (Red/Green Ornaments)", "Solve 20 clues to unlock the Gold ornament.", "mainPath"));
+    clueContainer.appendChild(renderPathHeader("main", "Main Path", "Solve 20 clues to unlock the Gold ornament.", "mainPath"));
     for (const c of getPathClues("main")) clueContainer.appendChild(renderClueCard(c));
 
-    clueContainer.appendChild(renderPathHeader("blue", "Blue Path", "Leads to the 2nd biggest prize.", "bluePath"));
+    clueContainer.appendChild(renderPathHeader("blue", "Blue Ornament Path", "Leads to the 2nd biggest prize.", "bluePath"));
     for (const c of getPathClues("blue")) clueContainer.appendChild(renderClueCard(c));
 
-    clueContainer.appendChild(renderPathHeader("purple", "Purple Path", "Leads to the 3rd biggest prize.", "purplePath"));
+    clueContainer.appendChild(renderPathHeader("purple", "Purple Ornament Path", "Leads to the 3rd biggest prize.", "purplePath"));
     for (const c of getPathClues("purple")) clueContainer.appendChild(renderClueCard(c));
 
-    clueContainer.appendChild(renderPathHeader("orange", "Orange Path", "Leads to the 4th biggest prize.", "orangePath"));
+    clueContainer.appendChild(renderPathHeader("orange", "Orange Ornament Path", "Leads to the 4th biggest prize.", "orangePath"));
     for (const c of getPathClues("orange")) clueContainer.appendChild(renderClueCard(c));
 
-    clueContainer.appendChild(renderPathHeader("white", "White Path", "Leads to the 5th biggest prize.", "whitePath"));
+    clueContainer.appendChild(renderPathHeader("white", "White Ornament Path", "Leads to the 5th biggest prize.", "whitePath"));
     for (const c of getPathClues("white")) clueContainer.appendChild(renderClueCard(c));
 
     const goldHeader = document.createElement("div");
