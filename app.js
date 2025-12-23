@@ -41,11 +41,21 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     { title: "Jingle Bell Rock by Bobby Helms", file: "./assets/Jingle Bell Rock.mp3" },
     { title: "Silent Night by Sinead OConnor", file: "./assets/Silent Night.mp3" },
     { title: "Last Christmas by Wham!", file: "./assets/Last Christmas.mp3" },
-    { title: "Rockin Around The Christmas Tree by Brenda Lee", file: "./assets/Rockin Around The Christmas Tree.mp3" },
+    { title: "Rockin' Around The Christmas Tree by Brenda Lee", file: "./assets/Rockin Around The Christmas Tree.mp3" },
     { title: "Let It Snow! Let It Snow! Let It Snow! by Dean Martin", file: "./assets/Let It Snow.mp3" },
-    { title: "Its Beginning To Look A Lot Like Christmas by Michael Buble", file: "./assets/Like Christmas.mp3" },
+    { title: "It's Beginning To Look A Lot Like Christmas by Michael Buble", file: "./assets/Like Christmas.mp3" },
     { title: "Underneath The Tree by Kelly Clarkson", file: "./assets/Underneath The Tree.mp3" },
-    { title: "Feliz Navidad by Jose Feliciano", file: "./assets/Feliz Navidad.mp3" }
+    { title: "Feliz Navidad by Jose Feliciano", file: "./assets/Feliz Navidad.mp3" },
+    { title: "It's The Most Wonderful Time Of The Year by Andy Williams", file: "./assets/Time Of The Year.mp3" },
+    { title: "Holly Jolly Christmas by Michael Buble", file: "./assets/Holly Jolly Christmas.mp3" },
+    { title: "Snowman by Sia", file: "./assets/Snowman.mp3" },
+    { title: "Santa Tell Me by Ariana Grande", file: "./assets/Santa Tell Me.mp3" },
+    { title: "Carol Of The Bells by John Williams", file: "./assets/Carol Of The Bells.mp3" },
+    { title: "The Polar Express by Tom Hanks", file: "./assets/The Polar Express.mp3" },
+    { title: "Santa, Can't You Hear Me by Ariana Grande and Kelly Clarkson", file: "./assets/You Hear Me.mp3" },
+    { title: "White Christmas by Bing Crosby", file: "./assets/White Christmas.mp3" },
+    { title: "Mary, Did You Know? by Pentatonix", file: "./assets/Did You Know.mp3" },
+    { title: "Running Up That Hill by Kate Bush", file: "./assets/Up That Hill.mp3" }
   ];
 
   const HINT_DELAY_MS = [10, 30, 60].map(m => m * 60 * 1000);
