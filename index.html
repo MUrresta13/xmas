@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -15,36 +14,19 @@
 <body>
   <div class="snow" aria-hidden="true"></div>
 
-  <main id="startScreen" class="screen screen--active">
-    <div class="startCard">
-      <img class="startIcon" src="./assets/xmas.PNG" alt="Christmas Hunt Icon" />
-      <h1 class="startTitle">Xmas Hunt</h1>
-
-      <button id="playBtn" class="btn btn--primary btn--fadein" type="button">
-        Play The 2025 Christmas Scavenger Hunt
-      </button>
-
-      <p class="startHint">Add to Home Screen for the app experience. Remember, keep sound up while playing (optional).</p>
-    </div>
-  </main>
-
-  <main id="appScreen" class="screen">
-    <header class="header">
-      <div class="headerLeft">
-        <img class="headerIcon" src="./assets/xmas.PNG" alt="Christmas Hunt Icon" />
-        <div>
-          <div class="headerKicker">Christmas Scavenger Hunt</div>
-          <div class="headerTitle">2025</div>
+  <main class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brandIcon" src="./assets/xmas.PNG" alt="Xmas Hunt" />
+        <div class="brandText">
+          <div class="brandTitle">Xmas Hunt</div>
+          <div class="brandSub">Christmas Scavenger Hunt 2025</div>
         </div>
       </div>
 
-      <div class="headerRight">
-        <button id="musicToggleBtn" class="btn btn--ghost" type="button" aria-expanded="false">
-          🎵 Music
-        </button>
-        <button id="howBtn" class="btn btn--ghost" type="button">
-          📜 Rules
-        </button>
+      <div class="topActions">
+        <button id="musicOpenBtn" class="btn btn--ghost" type="button">🎵 Music</button>
+        <button id="rulesOpenBtn" class="btn btn--ghost" type="button">📜 Rules</button>
       </div>
     </header>
 
@@ -60,20 +42,26 @@
             <input id="musicEnabled" type="checkbox" checked />
             <span class="slider"></span>
           </label>
-          <div>
-            <div class="labelStrong">Music On</div>
-            <div class="labelSub">Toggle background music</div>
+          <div class="musicLabel">
+            <div class="musicTitle">Music On</div>
+            <div class="musicSub">Toggle background music</div>
           </div>
         </div>
 
-        <div class="musicRow">
-          <button id="musicPrev" class="btn btn--small" type="button">⏮</button>
-          <button id="musicPlayPause" class="btn btn--small btn--primary" type="button">⏯</button>
-          <button id="musicNext" class="btn btn--small" type="button">⏭</button>
+        <div class="musicControls">
+          <button id="musicPrevBtn" class="btn btn--ghost" type="button">⏮</button>
+          <button id="musicPlayPauseBtn" class="btn btn--primary" type="button">⏸</button>
+          <button id="musicNextBtn" class="btn btn--ghost" type="button">⏭</button>
         </div>
 
-        <div class="labelStrong">Playlist</div>
-        <div id="playlist" class="playlist"></div>
+        <div class="drawerDivider"></div>
+
+        <div class="drawerSectionTitle">Playlist</div>
+        <div id="musicList" class="musicList"></div>
+
+        <div class="tinyNote">
+          Put mp3 files in <code>/assets</code> and edit the playlist in <code>app.js</code>.
+        </div>
       </div>
     </aside>
 
@@ -86,156 +74,131 @@
         <div class="modalBody">
           <ul class="rulesList">
             <li>Unlock your first clue by entering <b>CHRISTMAS2025</b> in the Main Path unlock box.</li>
-            <li>Each clue has a passcode box. When you find that clue in the house, you’ll get the passcode and enter it here to solve.</li>
-            <li>Solving a clue unlocks another random clue in that same path (until the last clue, which only unlocks after the others are solved).</li>
-            <li>Hints unlock over time after a clue is unlocked: 10 minutes, 30 minutes, 60 minutes (countdowns shown).</li>
-            <li>Once you save your name, it locks for fairness.</li>
+            <li>Each clue has a passcode box. When you find that... house, you’ll get the passcode and enter it here to solve.</li>
+            <li>Solving a clue unlocks another clue in that path.</li>
+            <li>Hints unlock over time after each clue is unlocked.</li>
           </ul>
+        </div>
+      </div>
+    </div>
 
-          <div class="resetBox">
-            <div class="labelStrong">Reset (Host Only)</div>
-            <div class="labelSub">Enter the host reset passcode to wipe saved progress on this device.</div>
-            <div class="row">
-              <input id="resetInput" class="input" type="password" placeholder="Enter reset passcode" />
-              <button id="resetBtn" class="btn btn--danger" type="button">Reset</button>
+    <section class="grid">
+      <section class="leftCol">
+        <section class="card">
+          <div class="cardTitle">Player</div>
+
+          <div class="row">
+            <div>
+              <div class="labelStrong">Your Name</div>
+              <div class="labelSub">Name locks after saving. Leaderboard is shared if backend is configured.</div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- ✅ WINNER POPUP (NEW) -->
-    <div id="winnerModal" class="modal" aria-hidden="true">
-      <div class="modalCard modalCard--winner">
-        <div class="modalHeader">
-          <div class="modalTitle">🎉 Winner!</div>
-          <button id="winnerCloseBtn" class="btn btn--ghost" type="button">✕</button>
-        </div>
-
-        <div class="modalBody">
-          <div class="winnerTitle" id="winnerTitle">Congratulations!!!</div>
-          <div class="winnerSub" id="winnerSub">You're a Winner!!</div>
-
-          <div class="winnerActions">
-            <button id="winnerAckBtn" class="btn btn--primary" type="button">Back to Interface</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- confetti layer -->
-      <div id="confettiLayer" class="confetti" aria-hidden="true"></div>
-    </div>
-
-    <section class="layout">
-      <aside class="panel">
-        <div class="panelTitle">Player</div>
-
-        <div class="card">
-          <label class="labelStrong" for="playerName">Your Name</label>
           <div class="row">
-            <input id="playerName" class="input" type="text" placeholder="Enter your name" maxlength="24" />
+            <input id="playerNameInput" class="input" type="text" placeholder="Enter your name" />
             <button id="saveNameBtn" class="btn btn--primary" type="button">Save</button>
           </div>
-          <div class="labelSub">Name locks after saving.</div>
-        </div>
+        </section>
 
-        <div class="panelTitleRow">
-          <div class="panelTitle">Leaderboard</div>
-          <button id="refreshLeaderboardBtn" class="btn btn--small" type="button" title="Refresh leaderboard" aria-label="Refresh leaderboard">
-            ⟳
-          </button>
-        </div>
-
-        <div class="card">
-          <div class="leaderLegend">
-            <span class="pill pill--rg">Main</span>
-            <span class="pill pill--blue">Blue</span>
-            <span class="pill pill--purple">Purple</span>
-            <span class="pill pill--orange">Orange</span>
-            <span class="pill pill--white">White</span>
-            <span class="pill pill--gold">Gold</span>
+        <section class="card">
+          <div class="cardTitleRow">
+            <div class="cardTitle">Leaderboard</div>
+            <button id="refreshLeaderboardBtn" class="btn btn--ghost btn--tiny" type="button" title="Refresh leaderboard">⟳</button>
           </div>
 
+          <div class="tabs" id="lbTabs"></div>
           <div id="leaderboard" class="leaderboard"></div>
-        </div>
-      </aside>
+        </section>
+      </section>
 
-      <section class="panel panel--wide">
-        <div class="panelTitle">Unlock Boxes</div>
+      <section class="rightCol">
+        <section class="card">
+          <div class="cardTitle">Unlock Boxes</div>
 
-        <div class="grid2">
-          <div class="card">
-            <div class="labelStrong">Main Path Unlock</div>
-            <div class="labelSub">Type <b>CHRISTMAS2025</b> to unlock your first clue.</div>
-            <div class="row">
-              <input id="unlockMainInput" class="input" type="text" placeholder="Enter code" />
-              <button id="unlockMainBtn" class="btn btn--primary" type="button">Unlock</button>
+          <div class="unlockGrid">
+            <div class="unlockBox">
+              <div class="unlockTitle">Main Path (Red/Green → Gold)</div>
+              <div class="labelSub">Type <b>CHRISTMAS2025</b> to unlock your first clue (only once).</div>
+              <div class="row">
+                <input id="unlockMainInput" class="input" type="text" placeholder="Enter code" />
+                <button id="unlockMainBtn" class="btn btn--primary" type="button">Unlock</button>
+              </div>
             </div>
-            <div class="labelSub">Enter code to unlock <code>Red/Green Ornament Clues</code>.</div>
-          </div>
 
-          <div class="card">
-            <div class="labelStrong">Blue Ornament Path Unlock</div>
-            <div class="row">
-              <input id="unlockBlueInput" class="input" type="text" placeholder="Enter path code" />
-              <button id="unlockBlueBtn" class="btn btn--primary" type="button">Unlock</button>
+            <div class="unlockBox">
+              <div class="unlockTitle">Blue Path Unlock</div>
+              <div class="labelSub">Edit the code in <code>app.js</code>.</div>
+              <div class="row">
+                <input id="unlockBlueInput" class="input" type="text" placeholder="Enter path code" />
+                <button id="unlockBlueBtn" class="btn btn--primary" type="button">Unlock</button>
+              </div>
             </div>
-            <div class="labelSub">Enter code to unlock <code>Blue Ornament Clues</code>.</div>
-          </div>
 
-          <div class="card">
-            <div class="labelStrong">Purple Ornament Path Unlock</div>
-            <div class="row">
-              <input id="unlockPurpleInput" class="input" type="text" placeholder="Enter path code" />
-              <button id="unlockPurpleBtn" class="btn btn--primary" type="button">Unlock</button>
+            <div class="unlockBox">
+              <div class="unlockTitle">Purple Path Unlock</div>
+              <div class="labelSub">Edit the code in <code>app.js</code>.</div>
+              <div class="row">
+                <input id="unlockPurpleInput" class="input" type="text" placeholder="Enter path code" />
+                <button id="unlockPurpleBtn" class="btn btn--primary" type="button">Unlock</button>
+              </div>
             </div>
-            <div class="labelSub">Enter code to unlock <code>Purple Ornament Clues</code>.</div>
-          </div>
 
-          <div class="card">
-            <div class="labelStrong">Orange Ornament Path Unlock</div>
-            <div class="row">
-              <input id="unlockOrangeInput" class="input" type="text" placeholder="Enter path code" />
-              <button id="unlockOrangeBtn" class="btn btn--primary" type="button">Unlock</button>
+            <div class="unlockBox">
+              <div class="unlockTitle">Orange Path Unlock</div>
+              <div class="labelSub">Edit the code in <code>app.js</code>.</div>
+              <div class="row">
+                <input id="unlockOrangeInput" class="input" type="text" placeholder="Enter path code" />
+                <button id="unlockOrangeBtn" class="btn btn--primary" type="button">Unlock</button>
+              </div>
             </div>
-            <div class="labelSub">Enter code to unlock <code>Orange Ornament Clues</code>.</div>
-          </div>
 
-          <div class="card">
-            <div class="labelStrong">White Ornament Path Unlock</div>
-            <div class="row">
-              <input id="unlockWhiteInput" class="input" type="text" placeholder="Enter path code" />
-              <button id="unlockWhiteBtn" class="btn btn--primary" type="button">Unlock</button>
+            <div class="unlockBox">
+              <div class="unlockTitle">White Path Unlock</div>
+              <div class="labelSub">Edit the code in <code>app.js</code>.</div>
+              <div class="row">
+                <input id="unlockWhiteInput" class="input" type="text" placeholder="Enter path code" />
+                <button id="unlockWhiteBtn" class="btn btn--primary" type="button">Unlock</button>
+              </div>
             </div>
-            <div class="labelSub">Enter code to unlock <code>White Ornament Clues</code>.</div>
-          </div>
 
-          <div class="card">
-            <div class="labelStrong">Quick Links</div>
-            <div class="labelSub">Scroll to any path using these.</div>
-            <div class="row row--wrap">
-              <button class="btn btn--small" type="button" data-scroll="mainPath">Main</button>
-              <button class="btn btn--small" type="button" data-scroll="bluePath">Blue</button>
-              <button class="btn btn--small" type="button" data-scroll="purplePath">Purple</button>
-              <button class="btn btn--small" type="button" data-scroll="orangePath">Orange</button>
-              <button class="btn btn--small" type="button" data-scroll="whitePath">White</button>
-              <button class="btn btn--small" type="button" data-scroll="goldPath">Gold</button>
+            <div class="unlockBox">
+              <div class="unlockTitle">Quick Links</div>
+              <div class="labelSub">Scroll to any path using these.</div>
+              <div class="chips" id="quickLinks"></div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="panelTitle">Clues List</div>
-        <div id="clueContainer" class="clueContainer"></div>
+        <section class="card">
+          <div class="cardTitle">Clues List</div>
+          <div id="cluesRoot" class="clueContainer"></div>
+        </section>
       </section>
     </section>
 
     <audio id="bgm" preload="auto"></audio>
     <audio id="sfxUnlock" src="./assets/Unlock.mp3" preload="auto"></audio>
-
-    <!-- ✅ NEW: winner sound -->
     <audio id="sfxWinner" src="./assets/winner.mp3" preload="auto"></audio>
+
+    <div id="notifyModal" class="modal" aria-hidden="true">
+      <div class="modalCard">
+        <div class="modalHeader">
+          <div id="notifyTitle" class="modalTitle">Notice</div>
+          <button id="notifyCloseBtn" class="btn btn--ghost" type="button">✕</button>
+        </div>
+        <div class="modalBody notifyBody">
+          <div id="notifyBody" class="notifyText"></div>
+          <div id="notifyConfetti" class="confetti" aria-hidden="true"></div>
+          <div class="notifyActions">
+            <button id="notifyOkBtn" class="btn btn--primary" type="button">Back to Interface</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
+  <!-- IMPORTANT: module is required because app.js imports Supabase -->
   <script type="module" src="./app.js"></script>
 </body>
 </html>
