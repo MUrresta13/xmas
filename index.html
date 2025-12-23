@@ -24,7 +24,7 @@
         Play The 2025 Christmas Scavenger Hunt
       </button>
 
-      <p class="startHint">Add to Home Screen for the app experience.</p>
+      <p class="startHint">Add to Home Screen for the app experience. Remember, keep sound up while playing.</p>
     </div>
   </main>
 
@@ -74,10 +74,6 @@
 
         <div class="labelStrong">Playlist</div>
         <div id="playlist" class="playlist"></div>
-
-        <div class="smallNote">
-          Put mp3 files in <code>/assets</code> and edit the playlist in <code>app.js</code>.
-        </div>
       </div>
     </aside>
 
@@ -118,7 +114,7 @@
             <input id="playerName" class="input" type="text" placeholder="Enter your name" maxlength="24" />
             <button id="saveNameBtn" class="btn btn--primary" type="button">Save</button>
           </div>
-          <div class="labelSub">Name locks after saving. Leaderboard is shared if backend is configured.</div>
+          <div class="labelSub">Name locks after saving.</div>
         </div>
 
         <!-- ✅ ONLY CHANGE HERE: Leaderboard title + refresh button -->
@@ -148,12 +144,13 @@
 
         <div class="grid2">
           <div class="card">
-            <div class="labelStrong">Main Path (Red/Green → Gold)</div>
-            <div class="labelSub">Type <b>CHRISTMAS2025</b> to unlock your first clue (only once).</div>
+            <div class="labelStrong">Main Path Unlock</div>
+            <div class="labelSub">Type <b>CHRISTMAS2025</b> to unlock your first clue.</div>
             <div class="row">
               <input id="unlockMainInput" class="input" type="text" placeholder="Enter code" />
               <button id="unlockMainBtn" class="btn btn--primary" type="button">Unlock</button>
             </div>
+            <div class="labelSub">Enter code to unlock <code>Red/Green Ornament Clues</code>.</div>
           </div>
 
           <div class="card">
@@ -162,16 +159,16 @@
               <input id="unlockBlueInput" class="input" type="text" placeholder="Enter path code" />
               <button id="unlockBlueBtn" class="btn btn--primary" type="button">Unlock</button>
             </div>
-            <div class="labelSub">Edit the code in <code>app.js</code>.</div>
+            <div class="labelSub">Enter code to unlock <code>Blue Ornament Clues</code>.</div>
           </div>
-
+          
           <div class="card">
             <div class="labelStrong">Purple Path Unlock</div>
             <div class="row">
               <input id="unlockPurpleInput" class="input" type="text" placeholder="Enter path code" />
               <button id="unlockPurpleBtn" class="btn btn--primary" type="button">Unlock</button>
             </div>
-            <div class="labelSub">Edit the code in <code>app.js</code>.</div>
+            <div class="labelSub">Enter code to unlock <code>Purple Ornament Clues</code>.</div>
           </div>
 
           <div class="card">
@@ -180,7 +177,7 @@
               <input id="unlockOrangeInput" class="input" type="text" placeholder="Enter path code" />
               <button id="unlockOrangeBtn" class="btn btn--primary" type="button">Unlock</button>
             </div>
-            <div class="labelSub">Edit the code in <code>app.js</code>.</div>
+            <div class="labelSub">Enter code to unlock <code>Orange Ornament Clues</code>.</div>
           </div>
 
           <div class="card">
@@ -189,7 +186,7 @@
               <input id="unlockWhiteInput" class="input" type="text" placeholder="Enter path code" />
               <button id="unlockWhiteBtn" class="btn btn--primary" type="button">Unlock</button>
             </div>
-            <div class="labelSub">Edit the code in <code>app.js</code>.</div>
+            <div class="labelSub">Enter code to unlock <code>White Ornament Clues</code>.</div>
           </div>
 
           <div class="card">
@@ -206,7 +203,7 @@
           </div>
         </div>
 
-        <div class="panelTitle">Clues (One Long List)</div>
+        <div class="panelTitle">Clues List</div>
         <div id="clueContainer" class="clueContainer"></div>
       </section>
     </section>
