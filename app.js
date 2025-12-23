@@ -39,7 +39,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     { title: "All I Want For Christmas Is You by Mariah Carey", file: "./assets/All I Want For Christmas Is You.mp3" },
     { title: "Hallelujah by Pentatonix", file: "./assets/Hallelujah.mp3" },
     { title: "Jingle Bell Rock by Bobby Helms", file: "./assets/Jingle Bell Rock.mp3" },
-    { title: "Silent Night by Sinead OConnor", file: "./assets/Silent Night.mp3" },
+    { title: "Silent Night by Sinead O'Connor", file: "./assets/Silent Night.mp3" },
     { title: "Last Christmas by Wham!", file: "./assets/Last Christmas.mp3" },
     { title: "Rockin' Around The Christmas Tree by Brenda Lee", file: "./assets/Rockin Around The Christmas Tree.mp3" },
     { title: "Let It Snow! Let It Snow! Let It Snow! by Dean Martin", file: "./assets/Let It Snow.mp3" },
