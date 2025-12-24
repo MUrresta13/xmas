@@ -566,33 +566,41 @@ if (clueMeta && clueMeta.isLastInPath && ["blue","purple","orange","white"].incl
   showWinnerPopup(clueMeta.path);
 }
 
-let newlyUnlockedId = null;
+let unlockedIds = [];
 
+// MAIN PATH: unlock next main clue
 if (clueMeta?.path === "main") {
-  newlyUnlockedId = unlockRandomInPath("main");
+  const nextMain = unlockRandomInPath("main");
+  if (nextMain) unlockedIds.push(nextMain);
 
-  // Gold unlock happens after main is fully solved — exclude from unlock popup
-  if (isGoldUnlockedByRules()) {
-    unlockClue("gold_final");
-  }
-
-} else if (["blue","purple","orange","white"].includes(clueMeta?.path)) {
-  newlyUnlockedId = unlockRandomInPath(clueMeta.path);
-}
-
-// Show “X Clue Unlocked” popup ONLY if the unlocked clue is NOT:
-// - gold_final
-// - the last clue of any side path
-if (newlyUnlockedId) {
-  const newlyMeta = ALL_CLUES.find(c => c.id === newlyUnlockedId);
-  const isExcluded =
-    newlyUnlockedId === "gold_final" ||
-    (newlyMeta?.isLastInPath && ["blue","purple","orange","white"].includes(newlyMeta.path));
-
-  if (!isExcluded) {
-    showUnlockedPopup(newlyUnlockedId);
+  // GOLD: if main is fully solved, unlock gold and show popup
+  if (isGoldUnlockedByRules() && !state.clues["gold_final"]?.unlocked) {
+    const goldId = unlockClue("gold_final");
+    if (goldId) unlockedIds.push(goldId);
   }
 }
+
+// SIDE PATHS: unlock next clue in that path
+else if (["blue","purple","orange","white"].includes(clueMeta?.path)) {
+  const nextSide = unlockRandomInPath(clueMeta.path);
+  if (nextSide) unlockedIds.push(nextSide);
+}
+
+// Show ONE popup (priority: Gold first, otherwise first unlocked clue)
+// Exclude ONLY final side-path clues
+if (unlockedIds.length) {
+  const preferred = unlockedIds.includes("gold_final") ? "gold_final" : unlockedIds[0];
+
+  const preferredMeta = ALL_CLUES.find(c => c.id === preferred);
+  const isFinalSideClue =
+    preferredMeta?.isLastInPath &&
+    ["blue","purple","orange","white"].includes(preferredMeta.path);
+
+  if (!isFinalSideClue) {
+    showUnlockedPopup(preferred);
+  }
+}
+
 
   // gold path: no further unlocks
 
@@ -1198,6 +1206,12 @@ function setUnlockedModal(open) {
 }
 
 function showUnlockedPopup(clueId) {
+  if (clueId === "gold_final") {
+    unlockedText.textContent = "Gold Ornament Clue Unlocked.";
+    setUnlockedModal(true);
+    return;
+  }
+
   const clueMeta = ALL_CLUES.find(c => c.id === clueId);
   if (!clueMeta) return;
 
