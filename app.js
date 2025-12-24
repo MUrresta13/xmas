@@ -535,41 +535,38 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     return false;
   }
 
-  function solveClue(id, enteredPass) {
-    const cs = state.clues[id];
-    if (!cs?.unlocked || cs.solved) return { ok:false, msg:"Clue not unlocked (or already solved)." };
+function solveClue(id, enteredPass) {
+  const cs = state.clues[id];
+  if (!cs?.unlocked || cs.solved) return { ok:false, msg:"Clue not unlocked (or already solved)." };
 
-    if (id === "gold_final") {
-      cs.solved = true;
-      saveState();
-      renderAll();
-      return { ok:true, msg:"Gold clue marked solved." };
-    }
-
-    const expected = PASSCODES[id] ?? "";
-    if ((enteredPass || "").trim() !== expected.trim()) {
-      return { ok:false, msg:"Incorrect passcode." };
-    }
-
-    cs.solved = true;
-    saveState();
-    const clueMeta = ALL_CLUES.find(c => c.id === id);
-    if (clueMeta && clueMeta.isLastInPath && ["blue","purple","orange","white"].includes(clueMeta.path)) {
-      showWinnerPopup(clueMeta.path);
-    }
-
-
-    const clueMeta = ALL_CLUES.find(c => c.id === id);
-    if (clueMeta?.path === "main") {
-      unlockRandomInPath("main");
-      if (isGoldUnlockedByRules()) unlockClue("gold_final");
-    } else if (["blue","purple","orange","white"].includes(clueMeta?.path)) {
-      unlockRandomInPath(clueMeta.path);
-    }
-
-    renderAll();
-    return { ok:true, msg:"Solved!" };
+  const expected = PASSCODES[id] ?? "";
+  if ((enteredPass || "").trim() !== expected.trim()) {
+    return { ok:false, msg:"Incorrect passcode." };
   }
+
+  cs.solved = true;
+  saveState();
+
+  // Get the clue metadata ONCE
+  const clueMeta = ALL_CLUES.find(c => c.id === id);
+
+  // Winner popup ONLY for the FINAL clue of Blue/Purple/Orange/White paths
+  if (clueMeta && clueMeta.isLastInPath && ["blue","purple","orange","white"].includes(clueMeta.path)) {
+    showWinnerPopup(clueMeta.path);
+  }
+
+  // Normal unlocking logic (unchanged)
+  if (clueMeta?.path === "main") {
+    unlockRandomInPath("main");
+    if (isGoldUnlockedByRules()) unlockClue("gold_final");
+  } else if (["blue","purple","orange","white"].includes(clueMeta?.path)) {
+    unlockRandomInPath(clueMeta.path);
+  }
+  // gold path: no further unlocks
+
+  renderAll();
+  return { ok:true, msg:"Solved!" };
+}
 
   function msToClock(ms) {
     const s = Math.max(0, Math.ceil(ms / 1000));
