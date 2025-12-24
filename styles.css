@@ -437,3 +437,51 @@ body{
 .panelTitleRow .panelTitle{
   margin:0; /* prevents double spacing since panelTitle already has margins */
 }
+
+/* Winner Modal */
+.modal .modalInner{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.winnerCard{
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.winnerConfetti{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.confettiPiece{
+  position: absolute;
+  top: -12px;
+  left: 0;
+  width: 10px;
+  height: 14px;
+  border-radius: 3px;
+  opacity: 0.95;
+  transform: translateX(var(--x)) rotate(var(--r));
+  animation: confettiFall var(--d) linear infinite;
+  animation-delay: var(--delay);
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
+}
+
+@keyframes confettiFall{
+  0%   { transform: translateX(var(--x)) translateY(-20px) rotate(var(--r)); }
+  100% { transform: translateX(calc(var(--x) + var(--drift))) translateY(120vh) rotate(calc(var(--r) + 720deg)); }
+}
+
+/* Optional: make modal feel more celebratory */
+#winnerModal .modalCard{
+  backdrop-filter: blur(10px);
+}
