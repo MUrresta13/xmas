@@ -485,3 +485,24 @@ body{
 #winnerModal .modalCard{
   backdrop-filter: blur(10px);
 }
+
+/* Rules modal should center on the screen, not the clue list */
+#rulesModal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* When open */
+#rulesModal.modal--open {
+  display: flex;
+}
+
+/* The rules popup card */
+#rulesModal .modalCard {
+  max-width: 560px;
+  width: calc(100% - 24px);
+}
