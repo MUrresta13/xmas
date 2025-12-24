@@ -161,7 +161,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       clues.push(makeClue({
         id,
         path: "main",
-        label: `Red/Green Ornament Clue ${i}`,
+        label: `Main Ornament Clue ${i}`,
         colorDotClass: "dot-rg",
         clueText: d.clueText || "PLACEHOLDER CLUE TEXT — replace later.",
         hints: d.hints || [
