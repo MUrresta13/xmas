@@ -1159,6 +1159,7 @@ function setWinnerModal(open) {
       playMusic();
      }
    }
+   if (typeof saveState === "function") saveState();
  }
 }
 
