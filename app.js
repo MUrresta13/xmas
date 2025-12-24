@@ -116,6 +116,10 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   const winnerConfetti = document.getElementById("winnerConfetti");
   const sfxWinner = document.getElementById("sfxWinner");
 
+  const unlockedModal = document.getElementById("unlockedModal");
+  const unlockedText = document.getElementById("unlockedText");
+  const unlockedCloseBtn = document.getElementById("unlockedCloseBtn");
+
   let bgmWasPlayingBeforeWinner = false;
   let bgmWasEnabledBeforeWinner = true;
 
@@ -508,7 +512,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
   function unlockClue(id) {
     const cs = state.clues[id];
-    if (!cs || cs.unlocked) return;
+    if (!cs || cs.unlocked) return null;
 
     cs.unlocked = true;
     cs.unlockedAt = now();
@@ -520,22 +524,22 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     } catch {}
 
     renderAll();
+    return id;
   }
 
   function unlockRandomInPath(path) {
     const eligible = eligibleRandomClueIds(path);
     if (eligible.length > 0) {
       unlockClue(randChoice(eligible));
-      return true;
+      return unlockClue(id);
     }
     if (canUnlockLastClue(path)) {
       const lastId = lastClueId(path);
       if (lastId && !state.clues[lastId].unlocked) {
-        unlockClue(lastId);
-        return true;
+        return unlockClue(lastId);
       }
     }
-    return false;
+    return null;
   }
 
 function solveClue(id, enteredPass) {
@@ -551,20 +555,41 @@ function solveClue(id, enteredPass) {
   saveState();
 
   // Get the clue metadata ONCE
-  const clueMeta = ALL_CLUES.find(c => c.id === id);
+const clueMeta = ALL_CLUES.find(c => c.id === id);
 
-  // Winner popup ONLY for the FINAL clue of Blue/Purple/Orange/White paths
-  if (clueMeta && clueMeta.isLastInPath && ["blue","purple","orange","white"].includes(clueMeta.path)) {
-    showWinnerPopup(clueMeta.path);
+// Winner popup ONLY for last clue of Blue/Purple/Orange/White
+if (clueMeta && clueMeta.isLastInPath && ["blue","purple","orange","white"].includes(clueMeta.path)) {
+  showWinnerPopup(clueMeta.path);
+}
+
+let newlyUnlockedId = null;
+
+if (clueMeta?.path === "main") {
+  newlyUnlockedId = unlockRandomInPath("main");
+
+  // Gold unlock happens after main is fully solved — exclude from unlock popup
+  if (isGoldUnlockedByRules()) {
+    unlockClue("gold_final");
   }
 
-  // Normal unlocking logic (unchanged)
-  if (clueMeta?.path === "main") {
-    unlockRandomInPath("main");
-    if (isGoldUnlockedByRules()) unlockClue("gold_final");
-  } else if (["blue","purple","orange","white"].includes(clueMeta?.path)) {
-    unlockRandomInPath(clueMeta.path);
+} else if (["blue","purple","orange","white"].includes(clueMeta?.path)) {
+  newlyUnlockedId = unlockRandomInPath(clueMeta.path);
+}
+
+// Show “X Clue Unlocked” popup ONLY if the unlocked clue is NOT:
+// - gold_final
+// - the last clue of any side path
+if (newlyUnlockedId) {
+  const newlyMeta = ALL_CLUES.find(c => c.id === newlyUnlockedId);
+  const isExcluded =
+    newlyUnlockedId === "gold_final" ||
+    (newlyMeta?.isLastInPath && ["blue","purple","orange","white"].includes(newlyMeta.path));
+
+  if (!isExcluded) {
+    showUnlockedPopup(newlyUnlockedId);
   }
+}
+
   // gold path: no further unlocks
 
   renderAll();
@@ -1162,6 +1187,29 @@ function setWinnerModal(open) {
    if (typeof saveState === "function") saveState();
  }
 }
+
+function setUnlockedModal(open) {
+  unlockedModal.classList.toggle("modal--open", open);
+  unlockedModal.setAttribute("aria-hidden", open ? "false" : "true");
+}
+
+function showUnlockedPopup(clueId) {
+  const clueMeta = ALL_CLUES.find(c => c.id === clueId);
+  if (!clueMeta) return;
+
+  unlockedText.textContent = `${clueMeta.label} Unlocked`;
+  setUnlockedModal(true);
+}
+
+if (unlockedCloseBtn) {
+  unlockedCloseBtn.addEventListener("click", () => setUnlockedModal(false));
+}
+if (unlockedModal) {
+  unlockedModal.addEventListener("click", (e) => {
+    if (e.target === unlockedModal) setUnlockedModal(false);
+  });
+}
+
 
 function playWinnerSoundOnce() {
   try {
