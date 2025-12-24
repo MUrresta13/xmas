@@ -272,32 +272,35 @@ a{ color:inherit; }
 
 /* ====== MODAL ====== */
 .modal{
-  position:fixed; inset:0;
-  background: rgba(0,0,0,.62);
+  position:fixed;
+  inset:0;
   display:none;
   align-items:center;
   justify-content:center;
-  padding: 18px;
-  z-index: 60;
+  background: rgba(0,0,0,.55);
+  z-index:60;
+  padding:16px;
 }
 .modal--open{ display:flex; }
 .modalCard{
-  width: min(760px, 100%);
-  background: rgba(10, 34, 26, .96);
+  width: min(740px, 100%);
   border:1px solid var(--border);
-  border-radius: 18px;
+  border-radius: var(--radius);
+  background: rgba(11,42,30,.92);
   box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
 }
 .modalHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding: 12px 12px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px;
   border-bottom:1px solid var(--border);
 }
-.modalTitle{ font-weight: 900; }
-.modalBody{ padding: 12px; }
+.modalTitle{ font-weight:900; font-size:18px; }
+.modalBody{ padding:12px; }
+.rulesList{ margin:0; padding-left:18px; color: rgba(244,247,246,.92); }
+.rulesList li{ margin:8px 0; }
 
+.resetBox{ margin-top:14px; border-top:1px solid var(--border); padding-top:12px; }
 /* =========================
    UNLOCK / WINNER POPUPS
    ========================= */
