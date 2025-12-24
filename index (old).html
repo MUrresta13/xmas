@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Xmas Hunt</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0b2a1e" />
+  <link rel="icon" href="./assets/xmas.PNG" />
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <div class="snow" aria-hidden="true"></div>
+
+  <main id="startScreen" class="screen screen--active">
+    <div class="startCard">
+      <img class="startIcon" src="./assets/xmas.PNG" alt="Christmas Hunt Icon" />
+      <h1 class="startTitle">Xmas Hunt</h1>
+
+      <button id="playBtn" class="btn btn--primary btn--fadein" type="button">
+        Play The 2025 Christmas Scavenger Hunt
+      </button>
+
+      <p class="startHint">Add to Home Screen for the app experience. Remember, keep sound up while playing.</p>
+    </div>
+  </main>
+
+  <main id="appScreen" class="screen">
+    <header class="header">
+      <div class="headerLeft">
+        <img class="headerIcon" src="./assets/xmas.PNG" alt="Christmas Hunt Icon" />
+        <div>
+          <div class="headerKicker">Christmas Scavenger Hunt</div>
+          <div class="headerTitle">2025</div>
+        </div>
+      </div>
+
+      <div class="headerRight">
+        <button id="musicToggleBtn" class="btn btn--ghost" type="button" aria-expanded="false">
+          🎵 Music
+        </button>
+        <button id="howBtn" class="btn btn--ghost" type="button">
+          📜 Rules
+        </button>
+      </div>
+    </header>
+
+    <aside id="musicDrawer" class="drawer" aria-hidden="true">
+      <div class="drawerHeader">
+        <div class="drawerTitle">Background Music</div>
+        <button id="musicCloseBtn" class="btn btn--ghost" type="button">✕</button>
+      </div>
+
+      <div class="drawerBody">
+        <div class="musicRow">
+          <label class="switch">
+            <input id="musicEnabled" type="checkbox" checked />
+            <span class="slider"></span>
+          </label>
+          <div>
+            <div class="labelStrong">Music On</div>
+            <div class="labelSub">Toggle background music</div>
+          </div>
+        </div>
+
+        <div class="musicRow">
+          <button id="musicPrev" class="btn btn--small" type="button">⏮</button>
+          <button id="musicPlayPause" class="btn btn--small btn--primary" type="button">⏯</button>
+          <button id="musicNext" class="btn btn--small" type="button">⏭</button>
+        </div>
+
+        <div class="labelStrong">Playlist</div>
+        <div id="playlist" class="playlist"></div>
+      </div>
+    </aside>
+
+    <div id="rulesModal" class="modal" aria-hidden="true">
+      <div class="modalCard">
+        <div class="modalHeader">
+          <div class="modalTitle">How This Works</div>
+          <button id="rulesCloseBtn" class="btn btn--ghost" type="button">✕</button>
+        </div>
+        <div class="modalBody">
+          <ul class="rulesList">
+            <li>Unlock your first clue by entering <b>CHRISTMAS2025</b> in the Main Path unlock box.</li>
+            <li>Each clue has a passcode box. When you find that clue in the house, you’ll get the passcode and enter it here to solve.</li>
+            <li>Solving a clue unlocks another random clue in that same path (until the last clue, which only unlocks after the others are solved).</li>
+            <li>Hints unlock over time after a clue is unlocked: 10 minutes, 30 minutes, 60 minutes (countdowns shown).</li>
+            <li>Once you save your name, it locks for fairness.</li>
+          </ul>
+
+          <div class="resetBox">
+            <div class="labelStrong">Reset (Host Only)</div>
+            <div class="labelSub">Enter the host reset passcode to wipe saved progress on this device.</div>
+            <div class="row">
+              <input id="resetInput" class="input" type="password" placeholder="Enter reset passcode" />
+              <button id="resetBtn" class="btn btn--danger" type="button">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="layout">
+      <aside class="panel">
+        <div class="panelTitle">Player</div>
+
+        <div class="card">
+          <label class="labelStrong" for="playerName">Your Name</label>
+          <div class="row">
+            <input id="playerName" class="input" type="text" placeholder="Enter your name" maxlength="24" />
+            <button id="saveNameBtn" class="btn btn--primary" type="button">Save</button>
+          </div>
+          <div class="labelSub">Name locks after saving.</div>
+        </div>
+
+        <!-- ✅ ONLY CHANGE HERE: Leaderboard title + refresh button -->
+        <div class="panelTitleRow">
+          <div class="panelTitle">Leaderboard</div>
+          <button id="refreshLeaderboardBtn" class="btn btn--small" type="button" title="Refresh leaderboard" aria-label="Refresh leaderboard">
+            ⟳
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="leaderLegend">
+            <span class="pill pill--rg">Main</span>
+            <span class="pill pill--blue">Blue</span>
+            <span class="pill pill--purple">Purple</span>
+            <span class="pill pill--orange">Orange</span>
+            <span class="pill pill--white">White</span>
+            <span class="pill pill--gold">Gold</span>
+          </div>
+
+          <div id="leaderboard" class="leaderboard"></div>
+        </div>
+      </aside>
+
+      <section class="panel panel--wide">
+        <div class="panelTitle">Unlock Boxes</div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="labelStrong">Main Path Unlock</div>
+            <div class="labelSub">Type <b>CHRISTMAS2025</b> to unlock your first clue.</div>
+            <div class="row">
+              <input id="unlockMainInput" class="input" type="text" placeholder="Enter code" />
+              <button id="unlockMainBtn" class="btn btn--primary" type="button">Unlock</button>
+            </div>
+            <div class="labelSub">Enter code to unlock <code>Red/Green Ornament Clues</code>.</div>
+          </div>
+
+          <div class="card">
+            <div class="labelStrong">Blue Ornament Path Unlock</div>
+            <div class="row">
+              <input id="unlockBlueInput" class="input" type="text" placeholder="Enter path code" />
+              <button id="unlockBlueBtn" class="btn btn--primary" type="button">Unlock</button>
+            </div>
+            <div class="labelSub">Enter code to unlock <code>Blue Ornament Clues</code>.</div>
+          </div>
+          
+          <div class="card">
+            <div class="labelStrong">Purple Ornament Path Unlock</div>
+            <div class="row">
+              <input id="unlockPurpleInput" class="input" type="text" placeholder="Enter path code" />
+              <button id="unlockPurpleBtn" class="btn btn--primary" type="button">Unlock</button>
+            </div>
+            <div class="labelSub">Enter code to unlock <code>Purple Ornament Clues</code>.</div>
+          </div>
+
+          <div class="card">
+            <div class="labelStrong">Orange Ornament Path Unlock</div>
+            <div class="row">
+              <input id="unlockOrangeInput" class="input" type="text" placeholder="Enter path code" />
+              <button id="unlockOrangeBtn" class="btn btn--primary" type="button">Unlock</button>
+            </div>
+            <div class="labelSub">Enter code to unlock <code>Orange Ornament Clues</code>.</div>
+          </div>
+
+          <div class="card">
+            <div class="labelStrong">White Ornament Path Unlock</div>
+            <div class="row">
+              <input id="unlockWhiteInput" class="input" type="text" placeholder="Enter path code" />
+              <button id="unlockWhiteBtn" class="btn btn--primary" type="button">Unlock</button>
+            </div>
+            <div class="labelSub">Enter code to unlock <code>White Ornament Clues</code>.</div>
+          </div>
+
+          <div class="card">
+            <div class="labelStrong">Quick Links</div>
+            <div class="labelSub">Scroll to any path using these.</div>
+            <div class="row row--wrap">
+              <button class="btn btn--small" type="button" data-scroll="mainPath">Main</button>
+              <button class="btn btn--small" type="button" data-scroll="bluePath">Blue</button>
+              <button class="btn btn--small" type="button" data-scroll="purplePath">Purple</button>
+              <button class="btn btn--small" type="button" data-scroll="orangePath">Orange</button>
+              <button class="btn btn--small" type="button" data-scroll="whitePath">White</button>
+              <button class="btn btn--small" type="button" data-scroll="goldPath">Gold</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panelTitle">Clues List</div>
+        <div id="clueContainer" class="clueContainer"></div>
+      </section>
+    </section>
+
+    <audio id="bgm" preload="auto"></audio>
+    <audio id="sfxUnlock" src="./assets/Unlock.mp3" preload="auto"></audio>
+  </main>
+
+  <!-- IMPORTANT: module is required because app.js imports Supabase -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
