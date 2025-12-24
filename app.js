@@ -527,20 +527,24 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     return id;
   }
 
-  function unlockRandomInPath(path) {
-    const eligible = eligibleRandomClueIds(path);
-    if (eligible.length > 0) {
-      unlockClue(randChoice(eligible));
-      return unlockClue(id);
-    }
-    if (canUnlockLastClue(path)) {
-      const lastId = lastClueId(path);
-      if (lastId && !state.clues[lastId].unlocked) {
-        return unlockClue(lastId);
-      }
-    }
-    return null;
+function unlockRandomInPath(path) {
+  const eligible = eligibleRandomClueIds(path);
+
+  if (eligible.length > 0) {
+    const id = randChoice(eligible);
+    return unlockClue(id);
   }
+
+  if (canUnlockLastClue(path)) {
+    const lastId = lastClueId(path);
+    if (lastId && !state.clues[lastId].unlocked) {
+      return unlockClue(lastId);
+    }
+  }
+
+  return null;
+}
+
 
 function solveClue(id, enteredPass) {
   const cs = state.clues[id];
