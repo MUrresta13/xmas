@@ -109,6 +109,14 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   const bgm = document.getElementById("bgm");
   const sfxUnlock = document.getElementById("sfxUnlock");
 
+  const winnerModal = document.getElementById("winnerModal");
+  const winnerTitle = document.getElementById("winnerTitle");
+  const winnerText = document.getElementById("winnerText");
+  const winnerCloseBtn = document.getElementById("winnerCloseBtn");
+  const winnerConfetti = document.getElementById("winnerConfetti");
+  const sfxWinner = document.getElementById("sfxWinner");
+
+
   // =========================
   // DATA MODEL
   // =========================
@@ -545,6 +553,11 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
     cs.solved = true;
     saveState();
+    const clueMeta = ALL_CLUES.find(c => c.id === id);
+    if (clueMeta && clueMeta.isLastInPath && ["blue","purple","orange","white"].includes(clueMeta.path)) {
+      showWinnerPopup(clueMeta.path);
+    }
+
 
     const clueMeta = ALL_CLUES.find(c => c.id === id);
     if (clueMeta?.path === "main") {
@@ -1112,11 +1125,87 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   howBtn.addEventListener("click", () => setRulesModal(true));
   rulesCloseBtn.addEventListener("click", () => setRulesModal(false));
   rulesModal.addEventListener("click", (e) => { if (e.target === rulesModal) setRulesModal(false); });
+   
+if (winnerCloseBtn) {
+  winnerCloseBtn.addEventListener("click", () => setWinnerModal(false));
+}
+if (winnerModal) {
+  winnerModal.addEventListener("click", (e) => {
+    if (e.target === winnerModal) setWinnerModal(false);
+  });
+}
+
 
   function setRulesModal(open) {
     rulesModal.classList.toggle("modal--open", open);
     rulesModal.setAttribute("aria-hidden", open ? "false" : "true");
   }
+
+function setWinnerModal(open) {
+  winnerModal.classList.toggle("modal--open", open);
+  winnerModal.setAttribute("aria-hidden", open ? "false" : "true");
+  if (!open) {
+    if (winnerConfetti) winnerConfetti.innerHTML = "";
+  }
+}
+
+function playWinnerSoundOnce() {
+  try {
+    if (!sfxWinner) return;
+    sfxWinner.currentTime = 0;
+    sfxWinner.play().catch(() => {});
+  } catch {}
+}
+
+function buildLoopingConfetti() {
+  if (!winnerConfetti) return;
+  winnerConfetti.innerHTML = "";
+
+  const colors = ["#ff3b30","#ff9500","#ffcc00","#34c759","#0a84ff","#bf5af2","#ffffff"];
+  const pieces = 90;
+
+  for (let i = 0; i < pieces; i++) {
+    const p = document.createElement("div");
+    p.className = "confettiPiece";
+
+    const x = Math.floor(Math.random() * 100);
+    const drift = (Math.random() * 16 - 8).toFixed(2) + "vw";
+    const d = (Math.random() * 2.6 + 2.4).toFixed(2) + "s";
+    const delay = (Math.random() * 2.5).toFixed(2) + "s";
+    const r = Math.floor(Math.random() * 360) + "deg";
+
+    p.style.setProperty("--x", x + "vw");
+    p.style.setProperty("--drift", drift);
+    p.style.setProperty("--d", d);
+    p.style.setProperty("--delay", delay);
+    p.style.setProperty("--r", r);
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+    const w = Math.floor(Math.random() * 7) + 6;
+    const h = Math.floor(Math.random() * 10) + 10;
+    p.style.width = w + "px";
+    p.style.height = h + "px";
+
+    winnerConfetti.appendChild(p);
+  }
+}
+
+function showWinnerPopup(path) {
+  const pretty = {
+    blue: "Blue Ornament Winner",
+    purple: "Purple Ornament Winner",
+    orange: "Orange Ornament Winner",
+    white: "White Ornament Winner"
+  }[path] || "Winner";
+
+  winnerTitle.textContent = "Congratulations!!";
+  winnerText.textContent = `You are the ${pretty}!`;
+
+  buildLoopingConfetti();
+  playWinnerSoundOnce();
+  setWinnerModal(true);
+}
+
 
   resetBtn.addEventListener("click", () => {
     const code = (resetInput.value || "").trim();
