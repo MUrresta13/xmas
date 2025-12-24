@@ -192,7 +192,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     clues.push(makeClue({
       id: `gold_final`,
       path: "gold",
-      label: `Gold Clue ($100 Prize)`,
+      label: `Gold Clue ($100)`,
       colorDotClass: "dot-gold",
       isLastInPath: true,
       clueText: (CLUE_DATA["gold_final"]?.clueText) || "FINAL GOLD CLUE TEXT — replace later.",
