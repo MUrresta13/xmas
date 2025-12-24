@@ -214,5 +214,24 @@
 
   <!-- IMPORTANT: module is required because app.js imports Supabase -->
   <script type="module" src="./app.js"></script>
+  
+<audio id="sfxWinner" preload="auto" src="./assets/winner.mp3"></audio>
+
+<!-- Winner Modal -->
+<div id="winnerModal" class="modal" aria-hidden="true">
+  <div class="modalInner">
+    <div class="winnerConfetti" id="winnerConfetti"></div>
+
+    <div class="modalCard winnerCard">
+      <h2 id="winnerTitle" class="modalTitle">Congratulations!!</h2>
+      <p id="winnerText" class="modalText">You are a Winner!</p>
+
+      <button id="winnerCloseBtn" class="btn btn--primary" type="button">
+        Back to the Interface
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
