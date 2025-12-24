@@ -116,6 +116,9 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   const winnerConfetti = document.getElementById("winnerConfetti");
   const sfxWinner = document.getElementById("sfxWinner");
 
+  let bgmWasPlayingBeforeWinner = false;
+  let bgmWasEnabledBeforeWinner = true;
+
 
   // =========================
   // DATA MODEL
@@ -1142,12 +1145,35 @@ function setWinnerModal(open) {
   winnerModal.classList.toggle("modal--open", open);
   winnerModal.setAttribute("aria-hidden", open ? "false" : "true");
   if (!open) {
-    if (winnerConfetti) winnerConfetti.innerHTML = "";
+  if (winnerConfetti) winnerConfetti.innerHTML = "";
+
+  // Turn background music back on if it was on before the winner popup
+  if (state?.music) {
+    state.music.enabled = bgmWasEnabledBeforeWinner;
   }
+  if (musicEnabled) musicEnabled.checked = bgmWasEnabledBeforeWinner;
+
+  if (bgmWasEnabledBeforeWinner) {
+    // Resume only if it was actually playing before
+    if (bgmWasPlayingBeforeWinner && typeof playMusic === "function") {
+      playMusic();
+     }
+   }
+ }
 }
 
 function playWinnerSoundOnce() {
   try {
+    // Remember music state
+    bgmWasEnabledBeforeWinner = !!state?.music?.enabled;
+    bgmWasPlayingBeforeWinner = !!state?.music?.playing;
+
+    // Turn music OFF / pause it
+    if (typeof pauseMusic === "function") pauseMusic();
+    if (musicEnabled) musicEnabled.checked = false; // toggles UI switch off (if you want it to visually reflect off)
+    if (state?.music) state.music.enabled = false;
+
+    // Play winner sound once
     if (!sfxWinner) return;
     sfxWinner.currentTime = 0;
     sfxWinner.play().catch(() => {});
