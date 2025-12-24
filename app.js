@@ -1108,23 +1108,32 @@ if (unlockedIds.length) {
     unlockMainInput.value = "";
   });
 
-  function handlePathUnlock(path, inputEl) {
-    const code = (inputEl.value || "").trim();
-    if (state.pathUnlockUsed[path]) return;
+function handlePathUnlock(path, inputEl) {
+  const code = (inputEl.value || "").trim();
+  if (state.pathUnlockUsed[path]) return;
 
-    if (code !== PATH_UNLOCK_CODES[path]) {
-      inputEl.value = "";
-      inputEl.placeholder = "Wrong code";
-      return;
-    }
-
-    state.pathUnlockUsed[path] = true;
-    saveState();
-
-    unlockRandomInPath(path);
+  if (code !== PATH_UNLOCK_CODES[path]) {
     inputEl.value = "";
-    renderAll();
+    inputEl.placeholder = "Wrong code";
+    return;
   }
+
+  state.pathUnlockUsed[path] = true;
+  saveState();
+
+  const unlockedId = unlockRandomInPath(path);
+  inputEl.value = "";
+  renderAll();
+
+  if (unlockedId) {
+    const meta = ALL_CLUES.find(c => c.id === unlockedId);
+    const isFinalSideClue =
+      meta?.isLastInPath && ["blue","purple","orange","white"].includes(meta.path);
+
+    if (!isFinalSideClue) showUnlockedPopup(unlockedId);
+  }
+}
+
 
   unlockBlueBtn.addEventListener("click", () => handlePathUnlock("blue", unlockBlueInput));
   unlockPurpleBtn.addEventListener("click", () => handlePathUnlock("purple", unlockPurpleInput));
