@@ -1090,23 +1090,30 @@ if (unlockedIds.length) {
     });
   }
 
-  unlockMainBtn.addEventListener("click", () => {
-    const code = (unlockMainInput.value || "").trim();
-    if (state.pathUnlockUsed.main) return;
+unlockMainBtn.addEventListener("click", () => {
+  const code = (unlockMainInput.value || "").trim();
+  if (state.pathUnlockUsed.main) return;
 
-    if (code !== PATH_UNLOCK_CODES.main) {
-      unlockMainInput.value = "";
-      unlockMainInput.placeholder = "Wrong code";
-      return;
-    }
-
-    state.pathUnlockUsed.main = true;
-    saveState();
-
-    unlockRandomInPath("main");
-    unlockMainBtn.disabled = true;
+  if (code !== PATH_UNLOCK_CODES.main) {
     unlockMainInput.value = "";
-  });
+    unlockMainInput.placeholder = "Wrong code";
+    return;
+  }
+
+  state.pathUnlockUsed.main = true;
+  saveState();
+
+  const unlockedId = unlockRandomInPath("main");
+  unlockMainBtn.disabled = true;
+  unlockMainInput.value = "";
+
+  // ✅ ensure UI reflects the unlocked clue
+  renderAll();
+
+  // ✅ show popup for Main Path unlock too
+  if (unlockedId) showUnlockedPopup(unlockedId);
+});
+
 
 function handlePathUnlock(path, inputEl) {
   const code = (inputEl.value || "").trim();
