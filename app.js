@@ -153,15 +153,45 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     // CLUE DATA MAP (EDIT HERE)
     // =========================
     const CLUE_DATA = {
-      "main_13": {
-        clueText: "REPLACE ME: Clue text for main_13",
-        hints: ["REPLACE ME: Hint 1", "REPLACE ME: Hint 2", "REPLACE ME: Hint 3"],
-        passcode: "REPLACE13"
+      "main_1": {
+        clueText: "Colors collide, alliances bend, A single word can end a friend.Small in size, but loud in war — I live where meals begin the score. (QR PASSCODE: THESTARWAITEDTHREEDAYS)",
+        hints: ["It’s a competitive social activity.", "It's in the dining room.", "Uno cards."],
+        passcode: "STILLNIGHTBROKENSTAR"
       },
+      "main_2": {
+        clueText: "Born of fire, forever still, A human form without a will. She watches all but cannot speak, Grace made solid—fragile, meek. (QR PASSCODE: CANDLENINESTOODSTILL)",
+        hints: ["Decorative, human-shaped.", "In the living room.", "ceramic woman."],
+        passcode: "FIVEWOUNDSOFGOLD"
+      },       
+      "main_3": {
+        clueText: "I hold a sip, not meant to hide, Clear as truth on shelves of pride. Behind clear walls I wait my turn, Too small to pour, too proud to burn. (QR PASSCODE: SNOWFELLBEFOREAMEN)",
+        hints: ["Used for drinking.", "Glassware, not cookware. In dining room.", "Dining room glass cabinet."],
+        passcode: "NOELBENEATHTHETHORN"
+      },              
+      "main_4": {
+        clueText: "Born to serve then meet the bin, No edge to boast, no weight to win. I feast once more, then disappear, A meal’s short-lived volunteer. (QR PASSCODE: THECHILDWASNOTALONE)",
+        hints: ["Disposable.", "Dining room.", "Utensils."],
+        passcode: "TWELVESHADOWSFELL"
+      },
+      "main_5": {
+        clueText: "No breath I draw, yet wings I wear, A silent guard of sculpted prayer. Where shadows dwell, I calmly stay, Watching night refuse the day. (QR PASSCODE: HOLLYWORETHECROWN)",
+        hints: ["Spiritual Winged Being.", "In the basement.", "Angel."],
+        passcode: "THEBELLCANNOTRINGTWICE"
+      },       
+      "main_6": {
+        clueText: "A kingdom curves around my side, Hot tales within my walls reside. I hold no crown, yet royalty sings, Stored where cups stack sleeping dreams. (QR PASSCODE: ANGELSCOUNTEDTHESILENT)",
+        hints: ["Spiritual Winged Being.", "In the basement.", "Angel."],
+        passcode: "HOLLYWITHOUTTHORNS"
+      },              
+      "main_7": {
+        clueText: "A roaring crowd with silent sound, Green fields trapped where discs are found. A year defines my numbered name, The world’s favorite arguing game. (QR PASSCODE: NOELLEFTUNSPOKEN)",
+        hints: ["Spiritual Winged Being.", "In the basement.", "Angel."],
+        passcode: "STARSEENBYFEWSHEPHERDS"
+      },              
       "blue_1": {
-        clueText: "REPLACE ME: Clue text for blue_1",
-        hints: ["REPLACE ME: Hint 1", "REPLACE ME: Hint 2", "REPLACE ME: Hint 3"],
-        passcode: "REPLACE2"
+        clueText: "No spell I cast, no wand I wield, Yet magic’s promise I reveal. A phrase that charms without a sound, In lower halls I can be found. (QR PASSCODE: GOLDWEIGHEDMORETHANJOY)",
+        hints: ["Decorative words.", "Fantasy/beauty themed.", "ENCHANTED BEAUTY sign."],
+        passcode: "EMBERINTHEMANGER"
       },
       "gold_final": {
         clueText: "REPLACE ME: Final gold clue text",
