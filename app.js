@@ -24,10 +24,10 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
   // =========================
   const PATH_UNLOCK_CODES = {
     main: "CHRISTMAS2025",
-    blue: "BLUECODEPLACEHOLDER",
-    purple: "PURPLECODEPLACEHOLDER",
-    orange: "ORANGECODEPLACEHOLDER",
-    white: "WHITECODEPLACEHOLDER"
+    blue: "GIFTSGIVENINWAITING",
+    purple: "THEMANGERREMAINEDOPEN",
+    orange: "SILVERFOLLOWEDGOLD",
+    white: "THENIGHTKEPTTHESECRET"
   };
 
   const RESET_CODE = "MikeChristmas1998";
@@ -154,7 +154,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     // =========================
     const CLUE_DATA = {
       "main_1": {
-        clueText: "Colors collide, alliances bend, A single word can end a friend.Small in size, but loud in war — I live where meals begin the score. (QR PASSCODE: THESTARWAITEDTHREEDAYS)",
+        clueText: "Colors collide, alliances bend, A single word can end a friend. Small in size, but loud in war — I live where meals begin the score. (QR PASSCODE: THESTARWAITEDTHREEDAYS)",
         hints: ["It’s a competitive social activity.", "It's in the dining room.", "Uno cards."],
         passcode: "STILLNIGHTBROKENSTAR"
       },
