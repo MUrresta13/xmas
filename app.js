@@ -198,10 +198,150 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
         hints: ["Think hygiene.", "Bathroom storage.", "Upstairs bathroom."],
         passcode: "ASHESINTHESTOCKING"
       },
+      "main_10": {
+        clueText: "We hold no gifts for most the year, Yet once we matter, hope draws near. Empty hands with festive role, Awaiting weight from hearth to soul. (QR PASSCODE: SILVERINTHEASHES)",
+        hints: ["Seasonal décor.", "Family room.", "Used to hang stockings."],
+        passcode: "WHITEDECEMBERFALLSQUIET"
+      },
+      "main_11": {
+        clueText: "I hide beneath the pale white crown, Where bones grow strong and spills drip down. Ignored by thirst, concealed by chill, I rest below what glasses fill. (QR PASSCODE: THREESHADOWSWATCHED)",
+        hints: ["Think cold.", "Basement.", "Milk in fridge."],
+        passcode: "SILENCEAFTERCAROLTHREE"
+      },
+      "main_12": {
+        clueText: "Three soft words nailed to belief, A counterspell to doubt and grief. Where mirrors judge and scissors sing, I remind you of everything. (QR PASSCODE: STARLIGHTNEVERRESTED)",
+        hints: ["Motivational décor.", "Basement.", "'You Are Amazing' sign."],
+        passcode: "FROSTBITTENHALLELUJAH"
+      },
+      "main_13": {
+        clueText: "I burn without a flame or spark, Clearing paths where pores go dark. My name is science, sharp and clean, A chemist’s fix for human skin. (QR PASSCODE: THEFASTOUTLASTEDFEAST)",
+        hints: ["Skincare treatment.", "Basement.", "In salon. Small Ácido Salicílico bottle."],
+        passcode: "THEFOURTHWISEMANLEFT"
+      },
+      "main_14": {
+        clueText: "I watch the room through cloth and shade, A silent eye the sun has made. Pulled aside, I flood with day, Left concealed, I slip away. (QR PASSCODE: CANDLESEVENWASLAST)",
+        hints: ["Structural, not handheld.", "Family room.", "Behind curtain."],
+        passcode: "TINSELHIDESTHESWORD"
+      },
+      "main_15": {
+        clueText: "I’m hung, not worn, yet dressed in shine, A fragile globe for festive time. One fall too far, I cease to be, A season’s glow upon a tree. (QR PASSCODE: THECAROLBROKEATDAWN)",
+        hints: ["Christmas décor.", "Family room.", "Ornament."],
+        passcode: "MIRROREDSTARABOVE"
+      },
+      "main_16": {
+        clueText: "I rise with purpose, rough with grain, A scarred monument to silent reign. No leaves I grow, yet bark I bear, A throne claimed daily by one who stares. (QR PASSCODE: SNOWKNEWHISNAME)",
+        hints: ["It’s something repeatedly abused on purpose.", "A creature sharpens itself here.", "Living room — made for the cat."],
+        passcode: "DECEMBERKEEPSSECRETS"
+      },
+      "main_17": {
+        clueText: "Turn me once and skies are born, Gravity sings through seeded thorn. No cloud obeys, no puddle stays, Yet storms fall down when I’m betrayed. (QR PASSCODE: GIFTSLEFTWITHOUTNAMES)",
+        hints: ["It makes sound without electronics.", "Its noise mimics weather.", "Dining room — a long hollow instrument."],
+        passcode: "ANGELSCOUNTINSHADOWS"
+      },
+      "main_18": {
+        clueText: "I spin when chaos meets the floor, Unwinding guilt in sheets of four. Not cloth nor hand, yet always there, A silent spine for thin despair. (QR PASSCODE: THEWORLDPHELDBREATH)",
+        hints: ["Activated during messes.", "It holds something disposable and absorbent.", "Kitchen — where rolls are torn."],
+        passcode: "THEFASTBEFORETHEFEAST"
+      },
+      "main_19": {
+        clueText: "I fight wars no eye can trace, Sold in armor made of paste. No wires hum, no screen will glow, Yet danger stops where I say “no.” (QR PASSCODE: BELLSRANGFORTHENOONE)",
+        hints: ["Activated during messes.", "It holds something disposable and absorbent.", "Kitchen — where rolls are torn."],
+        passcode: "COLDLIGHTOVERJUDEA"
+      },
+      "main_20": {
+        clueText: "I am borrowed height with rungs of trust, A spine of steps that’s earned, not just. I lean to cheat what walls forbid, Then fold away like I never did. (QR PASSCODE: THESTARREFUSEDTOPOINT)",
+        hints: ["It lets you reach places you normally can’t.", "It’s climbed, not installed.", "Garage — tall, with rungs, and movable."],
+        passcode: "BELLSRINGFORTHENOTLOST"
+      },
+      "blue_1": {
+        clueText: "I swallow forests once a year, Zip their ghosts till joy draws near. No roots remain, no needles breathe, Yet green returns when seals unseethe. (QR PASSCODE: WHITEWITNESSEDBLOOD)",
+        hints: ["Seasonal storage.", "Holds something large and festive.", "Garage — zipped bag for the Christmas tree."],
+        passcode: "MYRRHOVERGOLD"
+      },
+      "blue_2": {
+        clueText: "Frozen cheer in fragile skin, Joy paused mid-laugh, sealed within. Clay remembers what time forgets, Till winter calls its silhouettes. (QR PASSCODE: JOYARRIVEDAFTERDARK)",
+        hints: ["Holiday décor in storage.", "Ceramic figures involved.", "Garage — boxed Santa with children."],
+        passcode: "SIXTHCANDLEBURNSLOWEST"
+      },
       "blue_3": {
         clueText: "No spell I cast, no wand I wield, Yet magic’s promise I reveal. A phrase that charms without a sound, In lower halls I can be found. (QR PASSCODE: GOLDWEIGHEDMORETHANJOY)",
         hints: ["Decorative words.", "Fantasy/beauty themed.", "ENCHANTED BEAUTY sign."],
         passcode: "THESTARWASSILENT"
+      },
+      "blue_4": {
+        clueText: "I fall like dust but strike like teeth, A dark reply beneath belief. Born a berry, dried to pain, I wake the tongue where blandness reigns. (QR PASSCODE: THELIGHTCHOSESTRAW)",
+        hints: ["Edible seasoning.", "Kitchen.", "Paired with salt."],
+        passcode: "NOCRYINTHESNOW"
+      },
+      "blue_5": {
+        clueText: "I chase myself in endless chase, Carving futures from one place. Not the face, but proof it’s true, That time escapes despite our view. (QR PASSCODE: NOFLAMEWITHOUTSHADOW)",
+        hints: ["Part of a timekeeping device.", "Would move constantly. But not anymore.", "Living room clock."],
+        passcode: "SHEPHERDSAWNOMIRACLE"
+      },
+      "blue_6": {
+        clueText: "I hide where choices dress as meals, Behind the words your hunger reads. Cold steel guards what eyes won’t see, A secret masked by appetite’s plea. (QR PASSCODE: THEFEASTWASNOTFIRST)",
+        hints: ["It’s concealed behind something meant to be read.", "That cover lists food, not instructions.", "Front of the house — behind a menu on a metal cabinet."],
+        passcode: "THESTARNEVERMOVED"
+      },
+      "purple_1": {
+        clueText: "I eat what shame prefers to hide, A quiet war on scent and pride. Placed where judgments enter first, So guests won’t guess what pets rehearsed. (QR PASSCODE: COLDWATCHEDINSTEAD)",
+        hints: ["Pet-related.", "Controls smell.", "Front of the house."],
+        passcode: "WINTERHOLDSITSBREATH"
+      },
+      "purple_2": {
+        clueText: "I soften plans till they collapse, Turn minutes into missing gaps. I ask for rest, then steal your day, A velvet trap you gladly obey. (QR PASSCODE: ANGELSDIDNOTSINGTWICE)",
+        hints: ["Furniture.", "Used for sitting or lying.", "Living room."],
+        passcode: "ADVENTENDSINFLAME"
+      },
+      "purple_3": {
+        clueText: "I am peace forged under pressure tight, Fed by panic, crowned by fright. I starve the beast that loves to breathe, Yet pray I’m never asked to lead. (QR PASSCODE: HEAVENFELTWAITING)",
+        hints: ["Used only when things go wrong.", "In kitchen. It fights something that feeds on oxygen.", "Fire extinguisher."],
+        passcode: "ALLABOARD25"
+      },
+      "purple_4": {
+        clueText: "I promise summer, give you stone, Red without a drop or bone. A fruit that lies yet does not rot, Because I grew where soil did not. (QR PASSCODE: FROSTOVERJUDEA)",
+        hints: ["Decorative object.", "Looks like food.", "Dining room — ceramic watermelon."],
+        passcode: "THENIGHTKNEWHISNAME"
+      },
+      "purple_5": {
+        clueText: "Born from scraps and stubborn hands, I hold the weight store-bought can’t stand. Function carved from trial and flaw, A hook that learned instead of law. (QR PASSCODE: CAROLSWERESLOWLYSUNG)",
+        hints: ["Holds clothing.", "Handmade from wood.", "Upstairs. Handmade coat hanger."],
+        passcode: "FROSTONOLIVETREES"
+      },
+      "orange_1": {
+        clueText: "I’m not the path, yet save the fall, A silent vow against the wall. Ignored by youth, embraced by age, I steady fear on every stage. (QR PASSCODE: THEGIFTCOSTSOMETHING)",
+        hints: ["Grabbed for balance.", "Front of house.", "Railing on the stairs."],
+        passcode: "HEAVENWAITEDFOURDAYS"
+      },
+      "orange_2": {
+        clueText: "Beneath the seat of daily feasts, Where silent royalty eats like beasts, Crumbs may fall but truth stays low, Hidden where no eyes will go. (QR PASSCODE: NIGHTWITHOUTORNAMENT)",
+        hints: ["It’s near where an animal eats.", "Look beneath.", "Kitchen — under the chair where the cat food sits."],
+        passcode: "CAROLSSUNGINMINORKEY"
+      },
+      "orange_3": {
+        clueText: "Caught mid-trespass, praised not blamed, A thief whose crime is preordained. Forever climbing, never through, A paused descent the fire once knew. (QR PASSCODE: THESTARNEEDEDTIME)",
+        hints: ["Christmas decoration.", "Family room.", "Santa at fireplace."],
+        passcode: "GIFTSARENEVERFREE"
+      },
+      "orange_4": {
+        clueText: "I collect the proof of daily war, Keys, cups, crumbs, and something more. Never speaking, always blamed, For cluttered lives that pass unnamed. (QR PASSCODE: THECHILDSAWTHROUGHUS)",
+        hints: ["Furniture.", "Family room.", "Flat surface for items."],
+        passcode: "SNOWFELLOUTSIDETHETIME"
+      },
+      "white_1": {
+        clueText: "Cute disguises ruthless math, Friendships tested by the path. Heroes smile while monsters wait, Fate dealt flat from folded fate. (QR PASSCODE: CANDLESWAITEDFORLIGHT)",
+        hints: ["Tabletop game.", "Cartoon art with strategy.", "Basement — “Here to Slay.”"],
+        passcode: "CROWNOFSTRAWANDLIGHT"
+      },
+      "white_2": {
+        clueText: "Behind a face that earned your care, Another truth waits unaware. Compassion frames what eyes can see, But meaning hides where paper be. (QR PASSCODE: SILENCEWASTHEANSWER)",
+        hints: ["Something hidden behind something else.", "Behind a sponsored child’s photo.", "Basement — behind Bisirat’s picture."],
+        passcode: "BELLSTOLLONCEONLY"
+      },
+      "white_3": {
+        clueText: "Behind this veil, the house has veins, Metal bones and pressure chains. No beauty lives where purpose reigns, Yet life depends on what remains. (QR PASSCODE: THESNOWDIDNOTMELT)",
+        hints: ["Utility access.", "Plumbing-related.", "Basement salon — behind the plumbing door."],
+        passcode: "STARLIGHTWITHOUTPEACE"
       },
       "gold_final": {
         clueText: "REPLACE ME: Final gold clue text",
