@@ -185,13 +185,23 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       },              
       "main_7": {
         clueText: "A roaring crowd with silent sound, Green fields trapped where discs are found. A year defines my numbered name, The world’s favorite arguing game. (QR PASSCODE: NOELLEFTUNSPOKEN)",
-        hints: ["Spiritual Winged Being.", "In the basement.", "Angel."],
-        passcode: "STARSEENBYFEWSHEPHERDS"
-      },              
-      "blue_1": {
+        hints: ["Video game.", "In the basement.", "Fifa 08."],
+        passcode: "BETHLEHEMATDAWN"
+      },   
+      "main_8": {
+        clueText: "Clad in blue, with quiet grace, History turns upon my face. No crown I wear, yet chosen still, A mother’s faith, a servant’s will. (QR PASSCODE: FROSTBURIEDTHEBELLS)",
+        hints: ["Motherly religious figure.", "In family room.", "Mary."],
+        passcode: "CANDLESEVENWHENWINDSTOPS"
+      },
+      "main_9": {
+        clueText: "Behind my door, small cures align, Daily rituals drawn in line. I hide the tools of teeth and skin, Open me to look within. (QR PASSCODE: THEMANGERWASENOUGH)",
+        hints: ["Think hygiene.", "Bathroom storage.", "Upstairs bathroom."],
+        passcode: "ASHESINTHESTOCKING"
+      },
+      "blue_3": {
         clueText: "No spell I cast, no wand I wield, Yet magic’s promise I reveal. A phrase that charms without a sound, In lower halls I can be found. (QR PASSCODE: GOLDWEIGHEDMORETHANJOY)",
         hints: ["Decorative words.", "Fantasy/beauty themed.", "ENCHANTED BEAUTY sign."],
-        passcode: "EMBERINTHEMANGER"
+        passcode: "THESTARWASSILENT"
       },
       "gold_final": {
         clueText: "REPLACE ME: Final gold clue text",
