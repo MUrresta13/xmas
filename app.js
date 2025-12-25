@@ -344,8 +344,8 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
         passcode: "STARLIGHTWITHOUTPEACE"
       },
       "gold_final": {
-        clueText: "REPLACE ME: Final gold clue text",
-        hints: ["REPLACE ME: Gold hint 1", "REPLACE ME: Gold hint 2", "REPLACE ME: Gold hint 3"]
+        clueText: "I am the answer framed as art, The end that walked us from the start. Not time, not place, yet always near, Seen without eyes, held without fear.   I bore no lock, yet broke all chains, No throne I claimed, yet still I reign. Seek not the symbol, wood, or nail — The truth remains when riddles fail. (QR PASSCODE: SNOWCOVERSWHATBLED)",
+        hints: ["This is not an object meant to be used, only recognized.", "It represents the foundation rather than a decoration.", "Family room — the depiction of Jesus."]
       }
     };
 
